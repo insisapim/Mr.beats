@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mrbeats - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input{
+            color: #000 !important;  
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center bg-gray-900">
+
+    <div class="p-6 w-[500px]">
+        <div class="flex justify-center">
+            <div class="w-[500px] p-8 rounded-xl shadow-2xl bg-gray-800 bg-opacity-30 border border-purple-500/50 backdrop-blur-sm text-white ">
+                <h2 class="text-3xl font-bold text-center mb-8 text-white">Register</h2>
+
+                <form method="POST" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {{ form. }}
+                    <button type="submit" class="w-full py-3 px-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg" >Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
