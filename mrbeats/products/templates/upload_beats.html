@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload Beat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-900 text-gray-100 font-sans">
+    <div class="max-w-4xl mx-auto py-12 px-4">
+      <!-- Upload Beat Form -->
+      <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="bg-gray-800 p-6 rounded-lg space-y-6"
+      >
+        {% csrf_token %}
+
+        <!-- File Upload & Cover Art -->
+        <section class="grid grid-cols-2 gap-6">
+          <div class="">
+            <!-- Beat File -->
+
+            <div>
+              <label class="block mb-2 font-semibold"
+                >Beat File (MP3, WAV)</label
+              >
+              <div
+                class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+              >
+                <input
+                  type="file"
+                  name="beat_file"
+                  class="hidden"
+                  id="beatFile"
+                />
+
+                <label
+                  for="beatFile"
+                  class="cursor-pointer flex flex-col items-center"
+                >
+                  <!-- ขยายขนาด SVG -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-12 h-12 text-white mb-4"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+                    />
+                    <path
+                      d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
+                    />
+                  </svg>
+
+                  <!-- ข้อความ -->
+                  <span class="text-white text-2xl font-semibold"
+                    >Drop your beat here</span
+                  >
+                  <span class="text-gray-400 text-lg"
+                    >or click to browse files</span
+                  >
+                </label>
+              </div>
+            </div>
+
+            <!-- Cover Art -->
+            <div>
+              <label class="block mb-2 font-semibold mt-6"
+                >Cover Art (Optional)</label
+              >
+              <div
+                class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500"
+              >
+                <input
+                  type="file"
+                  name="cover_art"
+                  class="hidden"
+                  id="coverArt"
+                />
+                <label
+                  for="coverArt"
+                  class="cursor-pointer flex flex-col items-center"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    class="w-12 h-12 text-white mb-4"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    <path
+                      d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
+                    />
+                  </svg>
+                  Upload cover art (JPG, PNG)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Beat Info -->
+          <div>
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+              <div>
+                <label class="block mb-2 font-semibold">Beat Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="Enter beat title..."
+                  class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+              <div>
+                <label class="block mb-2 font-semibold">Description</label>
+                <textarea
+                  name="description"
+                  placeholder="Describe your beat..."
+                  rows="4"
+                  class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Genre & BPM -->
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block mb-2 font-semibold">Genre</label>
+                <select
+                  name="genre"
+                  class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option>Hip Hop</option>
+                  <option>Pop</option>
+                  <option>R&B</option>
+                  <option>Trap</option>
+                </select>
+              </div>
+              <div>
+                <label class="block mb-2 font-semibold">BPM</label>
+                <input
+                  type="number"
+                  name="bpm"
+                  placeholder="140"
+                  class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+            </div>
+
+            <!-- Mood/Vibe Tags -->
+            <div>
+              <label class="block mb-2 font-semibold">Theme</label>
+              <textarea
+                name="description"
+                placeholder="Example: 808s, Retro, Hard, Melodic, ..."
+                rows="4"
+                class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              ></textarea>
+            </div>
+          </div>
+        </section>
+        <!-- Pricing & Licensing -->
+        <div>
+          <h2 class="text-lg font-semibold mb-4">Pricing & Licensing</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 bg-gray-700 rounded-lg">
+              <label class="block mb-2 font-semibold">Basic License</label>
+              <div class="flex gap-2 items-center">
+                <span class="text-xl font-semibold">฿</span>
+                <input
+                  type="text"
+                  placeholder="29.99"
+                  class="w-full p-2 rounded bg-gray-600 text-gray-100"
+                />
+              </div>
+              <p class="text-gray-400 text-sm mt-1">Non-exclusive rights</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg">
+              <label class="block mb-2 font-semibold">Premium License</label>
+              <div class="flex gap-2 items-center">
+                <span class="text-xl font-semibold">฿</span>
+                <input
+                  type="text"
+                  placeholder="59.99"
+                  class="w-full p-2 rounded bg-gray-600 text-gray-100"
+                />
+              </div>
+              <p class="text-gray-400 text-sm mt-1">Exclusive rights</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg">
+              <label class="block mb-2 font-semibold">Unlimited License</label>
+              <div class="flex gap-2 items-center">
+                <span class="text-xl font-semibold">฿</span>
+                <input
+                  type="text"
+                  placeholder="199.99"
+                  class="w-full p-2 rounded bg-gray-600 text-gray-100"
+                />
+              </div>
+
+              <p class="text-gray-400 text-sm mt-1">Full commercial use</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-right">
+          <button
+            type="submit"
+            class="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded font-semibold"
+          >
+            Upload Beat
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

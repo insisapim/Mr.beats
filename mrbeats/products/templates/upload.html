@@ -1,0 +1,69 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Mr.Beats - Upload Beats{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-4">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold">
+      Upload Your <span class="text-purple-500">Creative Work</span>
+    </h1>
+    <p class="text-gray-400 mt-2">
+      Share your beats, lyrics, or offer your services to thousands of
+      artists worldwide
+    </p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex space-x-6 border-b border-gray-700 mb-6 justify-center">
+    <button
+      onclick="changeTab('beat')"
+      class="pb-2 border-b-2 border-purple-500 font-medium flex items-center space-x-2"
+      id="btn-beat"
+    >
+      🎵 <span>Upload Beat</span>
+    </button>
+    <button
+      onclick="changeTab('lyrics')"
+      class="pb-2 hover:text-white flex items-center space-x-2"
+      id="btn-lyrics"
+    >
+      📝 <span>Upload Lyrics</span>
+    </button>
+    <button
+      onclick="changeTab('service')"
+      class="pb-2 hover:text-white flex items-center space-x-2"
+      id="btn-service"
+    >
+      💼 <span>Offer Service</span>
+    </button>
+  </div>
+
+  <div id="tab-beat">{% include 'upload_beats.html' %}</div>
+  <div id="tab-lyrics" class="hidden">
+    {% include 'upload_lyrics.html' %}
+  </div>
+  <div id="tab-service" class="hidden">
+    {% include 'create_service.html' %}
+  </div>
+</div>
+
+<script>
+  function changeTab(tab) {
+    document
+      .querySelectorAll('[id^="tab-"]')
+      .forEach((el) => el.classList.add("hidden"));
+    document.getElementById(`tab-${tab}`).classList.remove("hidden");
+
+    document
+      .querySelectorAll('button[id^="btn-"]')
+      .forEach((btn) =>
+        btn.classList.remove("border-b-2", "border-purple-500")
+      );
+    document
+      .getElementById(`btn-${tab}`)
+      .classList.add("border-b-2", "border-purple-500");
+  }
+</script>
+{% endblock %}

@@ -11,4 +11,15 @@ def home(request):
             products = Product.objects.all()
 
         return render(request, 'home.html', {'products': products})
+
+
+class ProductListView(View):
+
+    def get(self, request):
+
+        return render(request, 'product_list.html')
     
+class UploadView(View):
+
+    def get(self, request):
+        return render(request, 'upload.html')

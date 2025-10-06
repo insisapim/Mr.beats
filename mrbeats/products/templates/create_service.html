@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Offer Your Service - Form</title>
+
+  <!-- Tailwind CDN (ตัวอย่าง) - ในโปรเจ็กต์จริงให้ build ด้วย Tailwind CLI/PostCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ปรับค่าโทนสี dark เพิ่มนิดหน่อย -->
+  <style>
+    :root {
+      --card-bg: #0b0b0d; /* main card bg */
+      --input-bg: #15161a;
+      --muted: #9ca3af;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#070708] text-gray-200 antialiased p-6">
+
+  <main class="max-w-4xl mx-auto">
+    <section class="bg-[var(--card-bg)] border border-gray-800 rounded-2xl p-8 shadow-xl">
+      <h1 class="text-2xl font-bold mb-6">Offer Your Service</h1>
+
+      <form class="space-y-6" action="#" method="POST" enctype="multipart/form-data">
+        <!-- Service Title -->
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Service Title</label>
+          <input
+            type="text"
+            name="title"
+            placeholder="I will produce a custom hip hop beat for you"
+            class="w-full bg-[var(--input-bg)] border border-gray-800 rounded-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600"
+          />
+        </div>
+
+        <!-- Service Description -->
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Service Description</label>
+          <textarea
+            name="description"
+            rows="6"
+            placeholder="Describe what you'll deliver and your process..."
+            class="w-full bg-[var(--input-bg)] border border-gray-800 rounded-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 resize-none"
+          ></textarea>
+        </div>
+
+        <!-- 3-column row: Category / Delivery Time / Starting Price -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- Category -->
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+            <select name="category"
+                    class="w-full bg-[var(--input-bg)] border border-gray-800 rounded-lg px-4 py-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-600">
+              <option>Beat Production</option>
+              <option>Mixing & Mastering</option>
+              <option>Session Musician</option>
+            </select>
+          </div>
+
+          <!-- Delivery -->
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Delivery Time</label>
+            <div class="relative">
+              <select name="delivery"
+                      class="w-full bg-[var(--input-bg)] border border-gray-800 rounded-lg px-4 py-3 text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-600">
+                <option>1 day</option>
+                <option>2 days</option>
+                <option>3 days</option>
+                <option>1 week</option>
+              </select>
+              <!-- small clock icon -->
+              <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l2 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Starting Price</label>
+            <div class="flex items-center space-x-2">
+              <span class="inline-flex items-center px-3 py-3 bg-[var(--input-bg)] border border-gray-800 rounded-l-lg text-gray-300">$</span>
+              <input type="number" name="price" step="0.01" min="0"
+                     value="99.99"
+                     class="w-full bg-[var(--input-bg)] border border-gray-800 rounded-r-lg px-4 py-3 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Portfolio Samples (dropzone) -->
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Portfolio Samples</label>
+
+          <label
+            for="portfolio"
+            class="group block border-2 border-dashed border-gray-700 rounded-lg p-6 cursor-pointer hover:border-purple-500 transition-colors"
+          >
+            <input id="portfolio" name="portfolio" type="file" accept="audio/*" class="hidden" multiple>
+
+            <div class="min-h-[110px] flex flex-col items-center justify-center gap-3">
+              <!-- Play / Upload SVG -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-400 group-hover:text-gray-200 transition-all" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-6.518-3.76A1 1 0 007 8.25v7.5a1 1 0 001.234.97l6.518-1.88A1 1 0 0016 14.96V12a1 1 0 00-1.248-.832z"/>
+              </svg>
+
+              <p class="text-gray-400 text-sm">Upload sample tracks or portfolio items</p>
+              <p class="text-xs text-gray-500">Drag & drop or click to browse (MP3, WAV)</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-gray-400">Optional: add tags, extras, or links later</div>
+
+          <button
+            type="submit"
+            class="inline-flex items-center gap-3 bg-gradient-to-r from-[#8b5cf6] to-[#d946ef] hover:from-[#7c3aed] hover:to-[#c026d3] text-white px-5 py-3 rounded-full shadow-lg transition-transform transform hover:-translate-y-0.5"
+          >
+            <!-- icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 5v14M5 12h14" />
+            </svg>
+            Create Service
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

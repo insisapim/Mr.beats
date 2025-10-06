@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}My Website{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0b0b0b] text-white">
+
+  {% include 'components/nav.html' %}
+
+  <main class="min-h-screen">
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>

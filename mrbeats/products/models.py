@@ -16,12 +16,13 @@ class Product(models.Model):
     file = models.FileField(upload_to='products/%Y/%m/%d/')
     preview_file = models.FileField(upload_to='products/previews/%Y/%m/%d/')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    license_text = models.TextField(blank=True, null=True)  # หรือเป็น FK ไปยัง License model
+    license_text = models.TextField(blank=True, null=True)
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
+    theme = models.TextField()
     product_image = models.ImageField(upload_to='products/images/%Y/%m/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    downloads = models.PositiveIntegerField(default=0)  # สถิติใช้งาน
+    downloads = models.PositiveIntegerField(default=0)
 
     class Meta:
         indexes = [

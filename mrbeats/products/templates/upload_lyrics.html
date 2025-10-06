@@ -1,0 +1,106 @@
+
+<body class="bg-gray-900 text-gray-100 font-sans">
+    <div class="max-w-4xl mx-auto py-12 px-4">
+
+      <!-- Upload Beat Form -->
+      <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="bg-gray-800 p-6 rounded-lg space-y-6"
+      >
+        {% csrf_token %}
+
+        <!-- File Upload & Cover Art -->
+        <section class="grid grid-cols-2 gap-6">
+          <!-- Beat Info -->
+          <div class="md:grid-cols-1 gap-6">
+            <div>
+              <label class="block mb-2 font-semibold">Beat Title</label>
+              <input
+                type="text"
+                name="title"
+                placeholder="Enter beat title..."
+                class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div class="mt-6">
+              <label class="block mb-2 font-semibold">Lyrics</label>
+              <textarea
+                name="lyrics"
+                placeholder="Describe your beat..."
+                rows="12"
+                class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Genre & BPM -->
+
+          <div class="">
+            <div class="gap-6">
+              <div>
+                <label class="block mb-2 font-semibold">Genre</label>
+                <select
+                  name="genre"
+                  class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option>Hip Hop</option>
+                  <option>Pop</option>
+                  <option>R&B</option>
+                  <option>Trap</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Mood/Vibe Tags -->
+            <div class="mt-6">
+              <label class="block mb-2 font-semibold">Theme</label>
+              <input
+                type="text"
+                name="theme"
+                placeholder="Example: 808s, Retro, Hard, Melodic, ..."
+                rows="4"
+                class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              ></input>
+            </div>
+
+            <div class="mt-6" >
+                <label class="block mb-2 font-semibold">Price</label>
+                <div class="flex gap-2 items-center">
+                <span class="text-xl font-semibold">฿</span>
+              <input
+                type="number"
+                name="price"
+                placeholder="59.99"
+                rows="4"
+                class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              ></input>
+              </div>
+            </div>
+
+            <div class="mt-6">
+                <label class="block mb-2 font-semibold">Description</label>
+              <textarea
+                name="description"
+                placeholder="Describe your beat..."
+                rows="4"
+                class="w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              ></textarea>
+            </div>
+          </div>
+        </section>
+        
+
+        <!-- Submit Button -->
+        <div class="text-right">
+          <button
+            type="submit"
+            class="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded font-semibold"
+          >
+            Upload Beat
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+
