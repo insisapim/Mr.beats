@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import Product
+from django.views import View
 
-def home(request):
-    def get(request):
+class home(View):
+    
+    def get(self, request):
         query = request.GET.get('q')
 
         if query:
