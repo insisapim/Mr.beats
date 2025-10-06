@@ -1,0 +1,148 @@
+{% extends 'layouts/base.html' %} 
+{% block title %}Mr.Beats - Browse{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Beats</title>
+  </head>
+  {% block content %}
+  <body class="bg-gray-900 text-white">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Heading -->
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold">
+          Browse <span class="text-purple-500">Beats</span>
+        </h1>
+        <p class="text-gray-400 mt-2">
+          Discover premium beats from talented producers worldwide
+        </p>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- Filters Sidebar -->
+        <div class="w-full md:w-1/4 bg-gray-800 p-4 rounded-lg space-y-4">
+            <div class="flex gap-1 items-center">
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
+                    <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"/>
+                    </svg>
+                </span>
+                <h2 class="font-semibold">Filters</h2>
+            </div>
+          <!-- Genre -->
+          <div>
+            <h2 class="font-semibold mb-2">Genre</h2>
+            <ul class="space-y-1 text-gray-300">
+              <li>
+                <label><input type="radio" name="genre" checked /> All</label>
+              </li>
+              <li>
+                <label><input type="radio" name="genre" /> Hip Hop</label>
+              </li>
+              <li>
+                <label><input type="radio" name="genre" /> Trap</label>
+              </li>
+              <li>
+                <label><input type="radio" name="genre" /> R&B</label>
+              </li>
+              <li>
+                <label><input type="radio" name="genre" /> Electronic</label>
+              </li>
+              <li>
+                <label><input type="radio" name="genre" /> Pop</label>
+              </li>
+              <li>
+                <label><input type="radio" name="genre" /> Rock</label>
+              </li>
+              <li>
+                <label><input type="radio" name="genre" /> Jazz</label>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Price Range -->
+          <div>
+            <h2 class="font-semibold mb-2">Price Range</h2>
+            <ul class="space-y-1 text-gray-300">
+              <li>
+                <label><input type="radio" name="price" checked /> All</label>
+              </li>
+              <li>
+                <label><input type="radio" name="price" /> $0-$25</label>
+              </li>
+              <li>
+                <label><input type="radio" name="price" /> $25-$50</label>
+              </li>
+              <li>
+                <label><input type="radio" name="price" /> $50-$100</label>
+              </li>
+              <li>
+                <label><input type="radio" name="price" /> $100+</label>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1">
+          <!-- Search + Sort -->
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4"
+          >
+            <input
+              type="text"
+              placeholder="Search beats, producers..."
+              class="flex-1 p-2 rounded-lg text-gray-900"
+            />
+            <div class="flex gap-2">
+              <button class="bg-purple-500 text-white px-3 py-2 rounded-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-grid-3x3"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5zM1.5 1a.5.5 0 0 0-.5.5V5h4V1zM5 6H1v4h4zm1 4h4V6H6zm-1 1H1v3.5a.5.5 0 0 0 .5.5H5zm1 0v4h4v-4zm5 0v4h3.5a.5.5 0 0 0 .5-.5V11zm0-1h4V6h-4zm0-5h4V1.5a.5.5 0 0 0-.5-.5H11zm-1 0V1H6v4z"
+                  />
+                </svg>
+              </button>
+              <button class="bg-gray-700 text-white px-3 py-2 rounded-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-list-ul"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"
+                  />
+                </svg>
+              </button>
+              <select class="bg-gray-700 text-white px-3 py-2 rounded-lg">
+                <option>Sort by</option>
+                <option>Price</option>
+                <option>BPM</option>
+                <option>Rating</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Cards Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for beat in beats %} {% include 'components/card.html' with
+            title="" owner="" times="" review_score="" downloads="" price=""%}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  {% endblock %}
+</html>
