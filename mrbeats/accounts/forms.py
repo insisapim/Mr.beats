@@ -31,7 +31,8 @@ class UserForm(UserCreationForm):
     username = forms.CharField(
         label="Username",
         widget=forms.TextInput(attrs={
-            'class': INPUT_CLASSES
+            'class': INPUT_CLASSES,
+            'placeholder': 'Enter yout username'
         })
     )
     password1 = forms.CharField(

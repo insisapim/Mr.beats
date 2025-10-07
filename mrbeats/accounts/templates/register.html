@@ -23,8 +23,14 @@
                 <form method="POST" action="{% url 'register' %}">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    {{ form. }}
+                    {{ form.error }}
                     <button type="submit" class="w-full py-3 px-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg" >Submit</button>
+                    <div class="flex flex-cols gap-2 items-center mt-6">
+                        <p class="text-white">Already have an account?</p>                   
+                        <a  href="{% url 'login' %}" class="font-bold text-center text-blue-500 hover:text-white underline">
+                        Login
+                        </a>
+                    </div>  
                 </form>
             </div>
         </div>
