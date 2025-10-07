@@ -9,8 +9,8 @@ class ContractWork(models.Model):
         ('rejected','Rejected'),
         ('completed','Completed'),
     )
-    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requested_contracts')
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_contracts')
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='requested_contracts')
+    contractor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_contracts', null=True)
     title = models.CharField(max_length=200)
     details = models.TextField()
     wages = models.DecimalField(max_digits=12, decimal_places=2)

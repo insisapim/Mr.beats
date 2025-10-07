@@ -3,22 +3,35 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Freelance Services</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 {% block content %}
-<body class="bg-[#0b0b0b] text-gray-200 min-h-screen">
 
-
-  <main class="max-w-7xl mx-auto px-6 mt-10">
-    <div class="flex justify-between items-center mb-8">
-      
+<body class="">
+    <div class="p-6 flex items-center justify-center ">
+            <div
+                class="w-[500px] p-8 rounded-xl shadow-2xl bg-gray-800 bg-opacity-30 border border-purple-500/50 backdrop-blur-sm text-white ">
+                <h2 class="text-3xl font-bold text-center mb-8 text-white">Create a Contract Request</h2>
+                {{ form.non_field_errors }}
+                <form method="POST" action="{% url 'createcontract' %}">
+                    {% csrf_token %}
+                    {{ form }}
+                    <div class="flex flex-cols gap-2 items-center mt-6">
+                        <button type="submit"
+                            class="w-full py-3 px-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg">Post
+                            Contract</button>
+                        <a href="{% url 'contract' %}"
+                            class="w-full text-center py-3 px-4 bg-gradient-primary hover:opacity-100 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg">Back</a>
+                    </div>
+                </form>
+        </div>
     </div>
-  </main>
-  {% include 'components/footer.html' %}
 </body>
 {% endblock %}
+
 </html>
