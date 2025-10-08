@@ -8,6 +8,12 @@ class Genre(models.Model):
         return self.name
 
 class Product(models.Model):
+    LICENSE_CHOICES = [
+        ('royalty_free', 'Royalty-free'),
+        ('non_exclusive', 'Non-exclusive'),
+        ('exclusive', 'Exclusive'),
+    ]
+
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='products')
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
@@ -16,13 +22,14 @@ class Product(models.Model):
     file = models.FileField(upload_to='products/%Y/%m/%d/')
     preview_file = models.FileField(upload_to='products/previews/%Y/%m/%d/')
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    license_text = models.TextField(blank=True, null=True)
-    genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
+    license_type = models.CharField(max_length=20, choices=LICENSE_CHOICES, default='non_exclusive')    
+    genre = models.ManyToManyField(Genre, blank=True, related_name="products")
     theme = models.TextField()
     product_image = models.ImageField(upload_to='products/images/%Y/%m/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     downloads = models.PositiveIntegerField(default=0)
+    lyrics_text = models.TextField(blank=True, null=True)
 
     class Meta:
         indexes = [
@@ -34,3 +41,4 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.title} — {self.seller}"
+
