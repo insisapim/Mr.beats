@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Product
 from django.views import View
 
-class home(View):
-    
+from .forms import *
+
+class HomepageView(View):
     def get(self, request):
         query = request.GET.get('q')
 
@@ -25,3 +26,16 @@ class UploadView(View):
 
     def get(self, request):
         return render(request, 'upload.html')
+    
+class UploadBeatsView(View):
+
+    def post(self, request):
+        productform = ProductForm(request.POST, request.FILES)
+
+        if productform.is_valid():
+            productform.save()
+
+            return redirect('home')
+        
+        print("errors:", productform.errors)
+        return render(request, "upload.html", {"productForm": productform}) 

@@ -31,22 +31,11 @@
     >
       📝 <span>Upload Lyrics</span>
     </button>
-    <button
-      onclick="changeTab('service')"
-      class="pb-2 hover:text-white flex items-center space-x-2"
-      id="btn-service"
-    >
-      💼 <span>Offer Service</span>
-    </button>
   </div>
 
-  <div id="tab-beat">{% include 'upload_beats.html' %}</div>
-  <div id="tab-lyrics" class="hidden">
-    {% include 'upload_lyrics.html' %}
-  </div>
-  <div id="tab-service" class="hidden">
-    {% include 'create_service.html' %}
-  </div>
+  {% load upload_tag %}
+  <div id="tab-beat">{% render_upload_beats %}</div>
+  <div id="tab-lyrics" class="hidden">{% render_upload_lyrics %}</div>
 </div>
 
 <script>
@@ -55,6 +44,7 @@
       .querySelectorAll('[id^="tab-"]')
       .forEach((el) => el.classList.add("hidden"));
     document.getElementById(`tab-${tab}`).classList.remove("hidden");
+    
 
     document
       .querySelectorAll('button[id^="btn-"]')

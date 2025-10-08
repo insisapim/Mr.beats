@@ -1,0 +1,138 @@
+# forms.py
+from django import forms
+from django.core.exceptions import ValidationError
+from .models import Product, Genre
+
+class GenreForm(forms.ModelForm):
+    class Meta:
+        model = Genre
+        fields = ["name"]
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "class": "form-input",
+                "placeholder": "เช่น Hip-Hop / Pop / Jazz"
+            }),
+        }
+
+
+class ProductForm(forms.ModelForm):
+    file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input hidden"}))
+    preview_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input hidden"}))
+
+    class Meta:
+        model = Product
+        fields = "__all__"
+        
+        widgets = {
+            # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
+            "seller": forms.HiddenInput(),
+            "title": forms.TextInput(attrs={
+                "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
+                "placeholder": "ชื่อผลงาน"
+            }),
+            "description": forms.Textarea(attrs={
+                "class": "form-textarea w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
+                "rows": 4,
+                "placeholder": "คำอธิบายผลงาน"
+            }),
+            "bpm": forms.NumberInput(attrs={
+                "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
+                "min": 1,
+                "max": 2000,
+                "placeholder": "เช่น 120"
+            }),
+            "music_key": forms.TextInput(attrs={
+                "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
+                "placeholder": "เช่น C#m, F, Am"
+            }),
+            "price": forms.NumberInput(attrs={
+                "class": "form-input w-full p-2 rounded bg-gray-600 text-gray-100",
+                "step": "0.01",
+                "min": "0",
+                "placeholder": "เช่น 19.99"
+            }),
+
+            # ManyToMany
+            "genre": forms.Select(
+                attrs={
+                    "class": "w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
+                }),            
+            "theme": forms.Textarea(attrs={
+                "class": "form-textarea w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
+                "rows": 2,
+                "placeholder": "ธีมหรือบรรยากาศของเพลง"
+            }),
+            "product_image": forms.ClearableFileInput(attrs={"class": "form-file-input hidden"}),
+            "lyrics_text": forms.Textarea(attrs={
+                "class": "form-textarea w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
+                "row": 15,
+                "placeholder": "เนื้อเพลงของคุณ...."
+            }),
+            "license_type": forms.Select(attrs={"class": "hidden"})
+        }
+
+    # Validation ขั้นพื้นฐาน
+    def clean_price(self):
+        price = self.cleaned_data.get("price")
+        if price is not None and price < 0:
+            raise ValidationError("ราคาต้องไม่เป็นค่าติดลบ")
+        return price
+
+    def clean_bpm(self):
+        bpm = self.cleaned_data.get("bpm")
+        if bpm is None:
+            return bpm
+        if bpm <= 0 or bpm > 2000:
+            raise ValidationError("BPM ต้องเป็นค่าบวกและเหมาะสม (1–2000)")
+        return bpm
+
+    def clean_file(self):
+        f = self.cleaned_data.get("file")
+        if not f:
+            raise ValidationError("กรุณาเลือกไฟล์")
+        # ตัวอย่างจำกัดขนาดไฟล์หลัก (ปรับตามต้องการ)
+        max_mb = 50
+        if f.size > max_mb * 1024 * 1024:
+            raise ValidationError(f"ไฟล์หลักต้องไม่เกิน {max_mb} MB")
+        return f
+
+    def clean_preview_file(self):
+        pf = self.cleaned_data.get("preview_file")
+        if not pf:
+            return pf
+        # ตัวอย่างจำกัดขนาดพรีวิว
+        max_mb = 50
+        if pf.size > max_mb * 1024 * 1024:
+            raise ValidationError(f"ไฟล์พรีวิวต้องไม่เกิน {max_mb} MB")
+        return pf
+    
+    def clean_lyrics_file(self):
+        pf = self.cleaned_data.get("lyrics_file")
+        if not pf:
+            return pf
+        # ตัวอย่างจำกัดขนาดพรีวิว
+        max_mb = 20
+        if pf.size > max_mb * 1024 * 1024:
+            raise ValidationError(f"ไฟล์เนื้อเพลงต้องไม่เกิน {max_mb} MB")
+        return pf
+    
+    def clean(self):
+        cleaned = super().clean()
+        license_type = cleaned.get('license_type')
+        price = cleaned.get('price')
+
+        if license_type == 'royalty_free':
+            # royalty-free ไม่ต้องมีราคาให้เป็น None
+            cleaned['price'] = None
+        elif license_type in ('non_exclusive', 'exclusive'):
+            if price in (None, ''):
+                # ถ้าต้องการแยกข้อความสำหรับ exclusive vs non-excl ให้เปลี่ยนข้อความได้
+                field_name = 'price'
+                raise ValidationError({field_name: 'กรุณากรอกราคาเมื่อเลือก Non-exclusive หรือ Exclusive'})
+            # คุณอาจเพิ่ม validation เพิ่ม เช่น price >= 1 หรือ min amount for exclusive
+            if price is not None and price < 0:
+                raise ValidationError({'price': 'ราคาต้องมากกว่าหรือเท่ากับ 0'})
+        else:
+            raise ValidationError({'license_type': 'ค่าวิธีการขายไม่ถูกต้อง'})
+
+        return cleaned
