@@ -15,8 +15,7 @@ class LoginView(View):
             user = form.get_user() 
             login(request,user)
             return redirect('home')  
-
-        return render(request,'register.html', {"form":form})
+        return render(request, 'login.html', {"form": form})
 
 class RegisterView(View):
     def get(self, request):
@@ -27,7 +26,7 @@ class RegisterView(View):
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('login')
         return render(request, 'register.html', {"form": form})
 
 class LogoutView(View):
