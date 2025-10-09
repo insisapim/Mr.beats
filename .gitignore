@@ -162,6 +162,10 @@ venv.bak/
 myvenv/
 myenv/
 
+# Django static and media files
+media/
+static/
+
 # Ignore Django migration files in all apps
 **/migrations/*.py
 !**/migrations/__init__.py
@@ -188,6 +192,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
 
 # PyCharm
 #   JetBrains specific template is maintained in a separate JetBrains.gitignore that can
