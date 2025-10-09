@@ -163,9 +163,8 @@ myvenv/
 myenv/
 
 # Ignore Django migration files in all apps
-*/migrations/*.py
-!*/migrations/__init__.py
-
+**/migrations/*.py
+!**/migrations/__init__.py
 # Spyder project settings
 .spyderproject
 .spyproject
