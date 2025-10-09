@@ -19,10 +19,22 @@ class GenreForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
     preview_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
+    price = forms.DecimalField(
+        required=False,
+        min_value=0,
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            "class": "form-input w-full p-2 rounded bg-gray-600 text-gray-100",
+            "step": "0.01",
+            "min": "0",
+            "placeholder": "เช่น 19.99"
+        })
+    )
 
     class Meta:
         model = Product
-        exclude = ("seller", "downloads", "price")
+        exclude = ("seller", "downloads")
         
         widgets = {
             # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
@@ -46,13 +58,6 @@ class ProductForm(forms.ModelForm):
                 "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
                 "placeholder": "เช่น C#m, F, Am"
             }),
-            "price": forms.NumberInput(attrs={
-                "class": "form-input w-full p-2 rounded bg-gray-600 text-gray-100",
-                "step": "0.01",
-                "min": "0",
-                "placeholder": "เช่น 19.99"
-            }),
-
             # ManyToMany
             "genre": forms.Select(
                 attrs={

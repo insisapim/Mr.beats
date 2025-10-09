@@ -1,0 +1,17 @@
+<div id="lyrics-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+  <div id="lyrics-modal-backdrop" class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity"></div>
+
+  <div id="lyrics-modal-panel"
+       role="dialog" aria-modal="true"
+       class="relative z-10 w-full max-w-3xl mx-4 rounded-lg bg-gray-900 text-gray-100 shadow-xl transform transition-all scale-95 opacity-0 justify-center items-center"
+       style="max-height:80vh;">
+    <div class="flex items-start justify-between p-4 border-b border-gray-800">
+      <h3 id="lyrics-modal-title" class="text-lg font-semibold">Lyrics preview</h3>
+      <button id="lyrics-modal-close" aria-label="Close modal" class="ml-4 rounded-md p-2 hover:bg-gray-800 transition">✕</button>
+    </div>
+
+    <div class="p-4 overflow-auto" style="max-height: calc(80vh - 72px);">
+      <pre id="lyrics-modal-content" class="whitespace-pre-wrap text-sm leading-relaxed"></pre>
+    </div>
+  </div>
+</div>

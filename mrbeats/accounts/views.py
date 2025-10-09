@@ -7,6 +7,8 @@ from .models import *
 from payments.models import Payment
 from reviews.models import Review
 from django.db.models import Avg, Count, Min, Sum
+from django.db.models.functions import TruncMonth
+import json
 
 
 class LoginView(View):
@@ -41,6 +43,37 @@ class LogoutView(View):
     
 class ProfileView(View):
     def get(self, request, id):
+        earnings_qs = (Payment.objects
+                   .filter(user_id=id)
+                   .annotate(month=TruncMonth('created_at'))
+                   .values('month')
+                   .annotate(total=Sum('amount'))
+                   .order_by('month'))
+
+        months = [p['month'].strftime('%Y-%m') for p in earnings_qs]
+        earnings = [float(p['total']) for p in earnings_qs]
+
+        # rating distribution (count per rating value 1..5)
+        ratings = (Review.objects
+                .filter(product__seller_id=id)
+                .values('rating')
+                .annotate(cnt=Count('id'))
+                .order_by('rating'))
+        # build dict for 1..5
+        rating_counts = {i: 0 for i in range(1, 6)}
+        for r in ratings:
+            rating_counts[r['rating']] = r['cnt']
+        rating_labels = list(rating_counts.keys())
+        rating_values = list(rating_counts.values())
+
+        context = {
+        'months_json': json.dumps(months),
+        'earnings_json': json.dumps(earnings),
+        'rating_labels_json': json.dumps(rating_labels),
+        'rating_values_json': json.dumps(rating_values),
+        # ส่งข้อมูลอื่น ๆ ที่ต้องการไปด้วย
+    }
+        
         user = User.objects.get(id=id)
         products = user.products.all()
         prodcount = user.products.all().count()
@@ -52,7 +85,35 @@ class ProfileView(View):
             avg_rating=Avg('rating'),
         )
         avg_rating = user_rating['avg_rating'] or 0
-        return render(request, 'profile.html', {"profileinfo": user, "product": products, "prodcount": prodcount, "totalearn": totalearn, "user_rating": avg_rating})
+
+        MAX_CHARS = 600  # limit ขนาดที่จะส่งไปยัง template
+
+        for p in products:
+            preview_text = ""
+            if getattr(p, "lyrics_text", None):
+                preview_text = p.lyrics_text
+            elif p.preview_file:
+                name = p.preview_file.name.lower()
+                # ตรวจเบื้องต้นจากนามสกุลว่าเป็นไฟล์ข้อความ
+                if name.endswith((".txt", ".lyric", ".lrc", ".md")):
+                    try:
+                        # เปิดไฟล์จาก storage และอ่านเป็น bytes -> decode
+                        p.preview_file.open("rb")
+                        raw = p.preview_file.read()
+                        try:
+                            preview_text = raw.decode("utf-8")
+                        except UnicodeDecodeError:
+                            preview_text = raw.decode("latin-1", errors="replace")
+                    except Exception:
+                        preview_text = ""
+                        
+        if preview_text:
+            preview_text = preview_text.strip()
+            if len(preview_text) > MAX_CHARS:
+                preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
+        p.preview_text = preview_text
+
+        return render(request, 'profile.html', {"profileinfo": user, "product": products, "prodcount": prodcount, "totalearn": totalearn, "user_rating": avg_rating, "context": context})
     
 
 class EditProfileView(View):

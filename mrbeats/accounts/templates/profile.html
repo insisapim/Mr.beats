@@ -1,5 +1,6 @@
 {% extends 'layouts/base.html' %} {%block title%}Mr.Beats-Profile{% endblock %}
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div
   class="bg-[#09090b] text-gray-200 flex flex-col items-center justify-center py-8"
 >
@@ -85,12 +86,16 @@
       <!-- Stats -->
       <div class="flex flex-wrap justify-between mt-6 text-center gap-4">
         <div class="flex-1 min-w-[100px]">
-          <div class="text-xl font-bold">{{totalearn.total_count |default:0 }}</div>
+          <div class="text-xl font-bold">
+            {{totalearn.total_count |default:0 }}
+          </div>
           <div class="text-gray-400 text-sm">Total Sales</div>
         </div>
         <div class="vertical-separator border"></div>
         <div class="flex-1 min-w-[100px]">
-          <div class="text-xl font-bold text-green-500">{{totalearn.total_earn |default:0 }}</div>
+          <div class="text-xl font-bold text-green-500">
+            {{totalearn.total_earn |default:0 }}
+          </div>
           <div class="text-gray-400 text-sm">Earnings</div>
         </div>
         <div class="vertical-separator border"></div>
@@ -107,8 +112,21 @@
             <span>{{ user_rating| default_if_none:0 | floatformat:1 }}</span>
           </div>
           <div class="text-gray-400 text-sm">Rating</div>
-        </div>  
+        </div>
       </div>
+
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card p-4">
+          <h3 class="font-semibold mb-2">Earnings (per month)</h3>
+          <canvas id="earningsChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="card p-4">
+          <h3 class="font-semibold mb-2">Rating distribution</h3>
+          <canvas id="ratingChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+
     </div>
 
     <!-- Uploads Header -->
@@ -139,12 +157,163 @@
 
     <!-- Uploads Grid Placeholder -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {%include 'components/lyrics_modal.html' %}
       <!-- ช่องว่างสำหรับใส่ card ในอนาคต -->
-      {% for prod in product %}
-        {% include "components/card.html" with product=prod %} {% empty %}
+      {% for prod in product %} 
+       {% if prod.lyrics_text == "" %}
+       {% include "components/card.html" with product=prod %}
+       {%else%}
+       {% include "components/lyricscard.html" with product=prod%}
+       {% endif %}
+       {% empty %}
       <p class="text-gray-400">ยังไม่มีสินค้า</p>
       {% endfor %}
     </div>
   </div>
 </div>
+<script>
+  
+  (function () {
+    let currentAudio = null;
+    let currentBtn = null;
+
+    document.querySelectorAll(".play-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.productId;
+        const audio = document.getElementById("audio-" + id);
+        const progressEl = document.getElementById("progress-" + id);
+        if (!audio || !progressEl) return;
+
+        // หยุด audio ตัวก่อน
+        if (currentAudio && currentAudio !== audio) {
+          currentAudio.pause();
+          document.getElementById(
+            "progress-" + currentBtn.dataset.productId
+          ).style.width = "0%";
+          currentBtn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+        }
+
+        if (audio.paused) {
+          await audio.play().catch((err) => console.error(err));
+          currentAudio = audio;
+          currentBtn = btn;
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>';
+        } else {
+          audio.pause();
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+          currentAudio = null;
+          currentBtn = null;
+          progressEl.style.width = "0%";
+        }
+
+        // อัปเดต progress
+        audio.addEventListener("timeupdate", () => {
+          if (!audio.duration) return;
+          progressEl.style.width =
+            (audio.currentTime / audio.duration) * 100 + "%";
+        });
+
+        audio.addEventListener("ended", () => {
+          progressEl.style.width = "0%";
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+          currentAudio = null;
+          currentBtn = null;
+        });
+      });
+    });
+  })();
+
+  const months = JSON.parse('{{ context.months_json|escapejs }}');
+  const earnings = JSON.parse('{{ context.earnings_json|escapejs }}');
+  const ratingLabels = JSON.parse('{{ context.rating_labels_json|escapejs }}');
+  const ratingValues = JSON.parse('{{ context.rating_values_json|escapejs }}');
+
+  // Earnings line chart
+  const ctx1 = document.getElementById('earningsChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Earnings (฿)',
+        data: earnings,
+        tension: 0.2,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Rating bar chart
+  const ctx2 = document.getElementById('ratingChart').getContext('2d');
+  new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: ratingLabels,
+      datasets: [{
+        label: 'Reviews',
+        data: ratingValues,
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true, precision: 0 } } }
+  });
+  
+(function () {
+  const modal = document.getElementById('lyrics-modal');
+  const panel = document.getElementById('lyrics-modal-panel');
+  const backdrop = document.getElementById('lyrics-modal-backdrop');
+  const closeBtn = document.getElementById('lyrics-modal-close');
+  const contentEl = document.getElementById('lyrics-modal-content');
+
+  function openModal(text) {
+    contentEl.textContent = text || 'No lyrics available.';
+    modal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      panel.classList.remove('scale-95', 'opacity-0');
+      panel.classList.add('scale-100', 'opacity-100');
+      document.documentElement.classList.add('overflow-hidden');
+    });
+  }
+
+  function closeModal() {
+    panel.classList.remove('scale-100', 'opacity-100');
+    panel.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      contentEl.textContent = '';
+      document.documentElement.classList.remove('overflow-hidden');
+    }, 180);
+  }
+
+  // delegated: เปิด modal เมื่อกดปุ่ม .lyrics-btn
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.lyrics-btn');
+    if (!btn) return;
+    e.preventDefault();
+    const id = btn.dataset.productId;
+    const src = document.getElementById('lyrics-' + id);
+    if (!src) {
+      openModal('No lyrics available.');
+      return;
+    }
+    const text = src.innerText?.trim() || '';
+    openModal(text);
+  });
+
+  // ปิด modal
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+})();
+
+</script>
 {% endblock %}
