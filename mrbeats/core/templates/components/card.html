@@ -1,83 +1,184 @@
 <article
-          class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm"
+  class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm"
+>
+  <div
+    class="relative aspect-[1/1] rounded-t-xl overflow-hidden bg-center bg-cover"
+    style="background-image: url('{{ product.product_image.url }}');"
+  >
+    <button
+      type="button"
+      class="play-btn absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center ring-4 ring-black/40 shadow-lg hover:scale-105 transition"
+      data-product-id="{{ product.id }}"
+      aria-label="Play preview for {{ product.title }}"
+    >
+      <svg class="play-icon w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
+        <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
+      </svg>
+      <!-- you may add a pause icon element and toggle display -->
+    </button>
+  </div>
+
+  {% if product.preview_file %}
+  <audio
+    id="audio-{{ product.id }}"
+    preload="none"
+    src="{{ product.preview_file.url }}"
+  ></audio>
+  {%else%}
+  <audio
+    id="audio-{{ product.id }}"
+    preload="none"
+    src="{{ product.file.url }}"
+  ></audio>
+  {% endif %}
+
+  <!-- optional: small progress bar -->
+  <div class="p-5 space-y-3">
+    <!-- ... other card content ... -->
+    {% if product.preview_file or product.file %}
+    <div class="mt-3">
+      <div class="w-full bg-gray-700 rounded h-1 overflow-hidden">
+        <div
+          id="progress-{{ product.id }}"
+          class="h-1 bg-purple-400"
+          style="width: 0%"
+        ></div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="p-5 space-y-3">
+    <h3 class="text-white font-semibold">{{ product.title }}</h3>
+    <p class="text-sm text-gray-400">
+      by
+      <span class="text-gray-200"
+        >{{ product.seller.artist_name|default:product.seller.username }}</span
+      >
+    </p>
+
+    <div class="flex items-center justify-between mt-2">
+      <div class="flex items-center gap-2">
+        <span
+          class="text-xs bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full"
+          >{{ product.genre.name|default:"-" }}</span
         >
-          <div
-            class="relative aspect-[1/1] rounded-t-xl overflow-hidden bg-gradient-to-br from-indigo-900 via-slate-800 to-teal-800"
+        <span class="text-xs text-gray-400"
+          >{{ product.created_at|date:"M d, Y" }}</span
+        >
+      </div>
+      <div class="text-sm text-gray-400 flex items-center gap-2">
+        <span class="flex items-center gap-1">
+          <svg
+            class="w-4 h-4 text-yellow-400"
+            viewBox="0 0 24 24"
+            fill="currentColor"
           >
-            <button
-              aria-label="Play beat"
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center ring-4 ring-black/40 shadow-lg hover:scale-105 transition"
-            >
-              <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
-                <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
-              </svg>
-            </button>
-          </div>
-          <div class="p-5 space-y-3">
-            <h3 class="text-white font-semibold">{{title}}</h3>
-            <p class="text-sm text-gray-400">
-              by <span class="text-gray-200">{{owner}}</span>
-            </p>
+            <path
+              d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.789 1.402 8.168L12 18.896 4.664 23.167l1.402-8.168L.132 9.21l8.2-1.192z"
+            />
+          </svg>
+          <span class="text-white font-semibold text-sm"
+            >{{ product.review_score|default:"-" }}</span
+          >
+        </span>
+        <span class="text-xs text-gray-500"
+          >{{ product.downloads|default:0 }} sales</span
+        >
+      </div>
+    </div>
 
-            <div class="flex items-center justify-between mt-2">
-              <div class="flex items-center gap-2">
-                <span
-                  class="text-xs bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full"
-                  >{{genre}}</span
-                >
-                <span class="text-xs text-gray-400">{{times}}</span>
-              </div>
-              <div class="text-sm text-gray-400 flex items-center gap-2">
-                <span class="flex items-center gap-1">
-                  <svg
-                    class="w-4 h-4 text-yellow-400"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.789 1.402 8.168L12 18.896 4.664 23.167l1.402-8.168L.132 9.21l8.2-1.192z"
-                    />
-                  </svg>
-                  <span class="text-white font-semibold text-sm">{{review_score}}</span>
-                </span>
-                <span class="text-xs text-gray-500">{{downloads}} sales</span>
-              </div>
-            </div>
+    <div class="flex items-center justify-between mt-4">
+      <div>
+        <div class="text-xl font-bold text-white">${{ product.price }}</div>
+      </div>
+      <div class="flex items-center gap-3">
+        <button
+          aria-label="Wishlist"
+          class="p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/5 transition"
+        >
+          <svg
+            class="w-5 h-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path
+              d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
+            />
+          </svg>
+        </button>
+        <button
+          class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
+<script>
+  (function () {
+    let currentAudio = null;
+    let currentBtn = null;
 
-            <div class="flex items-center justify-between mt-4">
-              <div><div class="text-xl font-bold text-white">{{price}}</div></div>
-              <div class="flex items-center gap-3">
-                <button
-                  aria-label="Wishlist"
-                  class="p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/5 transition"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  >
-                    <path
-                      d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
-                >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </article>
+    document.querySelectorAll(".play-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.productId;
+        const audio = document.getElementById("audio-" + id);
+        const progressEl = document.getElementById("progress-" + id);
+        if (!audio || !progressEl) return;
+
+        // หยุด audio ตัวก่อน
+        if (currentAudio && currentAudio !== audio) {
+          currentAudio.pause();
+          document.getElementById(
+            "progress-" + currentBtn.dataset.productId
+          ).style.width = "0%";
+          currentBtn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+        }
+
+        if (audio.paused) {
+          await audio.play().catch((err) => console.error(err));
+          currentAudio = audio;
+          currentBtn = btn;
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>';
+        } else {
+          audio.pause();
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+          currentAudio = null;
+          currentBtn = null;
+          progressEl.style.width = "0%";
+        }
+
+        // อัปเดต progress
+        audio.addEventListener("timeupdate", () => {
+          if (!audio.duration) return;
+          progressEl.style.width =
+            (audio.currentTime / audio.duration) * 100 + "%";
+        });
+
+        audio.addEventListener("ended", () => {
+          progressEl.style.width = "0%";
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+          currentAudio = null;
+          currentBtn = null;
+        });
+      });
+    });
+  })();
+</script>

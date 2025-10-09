@@ -54,6 +54,17 @@
     document
       .getElementById(`btn-${tab}`)
       .classList.add("border-b-2", "border-purple-500");
+
+    const url = new URL(window.location);
+    url.searchParams.set("upload_type", tab); //เอา url มาเปลี่ยน
+    window.history.pushState({}, "", url);//push เปลี่ยนแบบไม่ reload
   }
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("upload_type") || "beat"; // beat คือ default
+    changeTab(tab);});
+
 </script>
 {% endblock %}

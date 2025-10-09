@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Product
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
 
@@ -22,20 +23,35 @@ class ProductListView(View):
 
         return render(request, 'product_list.html')
     
-class UploadView(View):
+class UploadView(LoginRequiredMixin, View):
 
     def get(self, request):
-        return render(request, 'upload.html')
+        form = ProductForm()
+        return render(request, 'upload.html', {"productForm": form,})
     
-class UploadBeatsView(View):
-
     def post(self, request):
-        productform = ProductForm(request.POST, request.FILES)
-
-        if productform.is_valid():
-            productform.save()
-
+        upload_type = request.POST.get('upload_type') or request.GET.get('upload_type')
+        license_type = request.POST.get('license_type')
+        if upload_type == "beat":
+            form = ProductForm(request.POST, request.FILES)
+        elif upload_type == "lyrics":
+            form = LyricsForm(request.POST, request.FILES)
+            print("FILES:", request.FILES)
+        else:
             return redirect('home')
-        
-        print("errors:", productform.errors)
-        return render(request, "upload.html", {"productForm": productform}) 
+
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.seller = request.user
+            if upload_type == "lyrics":
+                product.license_type = "exclusive"
+            if license_type == "royalty_free":
+                product.price = 0
+            product.save()
+            form.save_m2m()
+            return redirect('home')
+        else:
+            raise ValidationError(form.errors);
+            
+
+

@@ -6,10 +6,12 @@
        {{ form.non_field_errors }}
       <form
         method="POST"
+        action="{% url 'uploads'%}"
         enctype="multipart/form-data"
         class="bg-gray-800 p-6 rounded-lg space-y-6"
       >
         {% csrf_token %}
+        <input type="hidden" name="upload_type" value="lyrics">
 
         <!-- File Upload & Cover Art -->
         <section class="grid grid-cols-2 gap-6">
@@ -17,55 +19,98 @@
           <!-- Beat Info -->
           <div class="md:grid-cols-1 gap-6">
             <div>
-              <label class="block mb-2 font-semibold">Beat Title</label>
-              {{productForm.title}}
-            </div>
-            <div class="mt-6">
               <label class="block mb-2 font-semibold">Lyrics</label>
-              {{productForm.lyrics_text}}
+              {{lyricsForm.lyrics_text}}
+            </div>
+             <div class="mt-6">
+              <label class="block mb-2 font-semibold"
+                >Lyrics File (PDF, Txt, docx)</label
+              >
+              <div
+                class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+              >
+                {{lyricsForm.file}}
+
+                <label
+                  for="{{lyricsForm.file.id_for_label}}"
+                  class="cursor-pointer flex flex-col items-center"
+                >
+                  <!-- ขยายขนาด SVG -->
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-12 h-12 text-white mb-4"
+                    fill="currentColor"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+                    />
+                    <path
+                      d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
+                    />
+                  </svg>
+
+                  <!-- ข้อความ -->
+                  <span class="text-white text-2xl font-semibold"
+                    >Drop your lyrics here</span
+                  >
+                  <span class="text-gray-400 text-lg"
+                    >or click to browse files</span
+                  >
+                </label>
+              </div>
             </div>
           </div>
+
+          
 
           <!-- Genre & BPM -->
 
           <div class="">
-            <div class="gap-6">
+
+            <div>
+              <label class="block mb-2 font-semibold">Beat Title</label>
+              {{lyricsForm.title}}
+            </div>
+          
+            <div class="mt-6 gap-6">
               <div>
                 <label class="block mb-2 font-semibold">Genre</label>
-                {{productForm.genre}}
+                {{lyricsForm.genre}}
               </div>
             </div>
 
             <!-- Mood/Vibe Tags -->
             <div class="mt-6">
               <label class="block mb-2 font-semibold">Theme</label>
-              {{productForm.theme}}
+              {{lyricsForm.theme}}
             </div>
 
             <div class="mt-6" >
                 <label class="block mb-2 font-semibold">Price</label>
                 <div class="flex gap-2 items-center">
                 <span class="text-xl font-semibold">฿</span>
-              {{productForm.price}}
+              {{lyricsForm.price}}
               </div>
             </div>
 
             <div class="mt-6">
                 <label class="block mb-2 font-semibold">Description</label>
-              {{productForm.description}}
+              {{lyricsForm.description}}
             </div>
           </div>
-          <div class="mt-6">
+          <div>
               <label class="block mb-2 font-semibold"
-                >Lyrics File (PDF, Txt, docx)</label
+                >Preview File(PDF, Txt, docx) </label
               >
+              <span class="text-gray-400 text-sm">แนะนำให้แสดงน้อยกว่าเนื้อเพลงจริง</span>
               <div
-                class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+                class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
               >
-                {{productForm.file}}
+                {{lyricsForm.preview_file}}
 
                 <label
-                  for="{{productForm.file.id_for_label}}"
+                  for="{{lyricsForm.preview_file.id_for_label}}"
                   class="cursor-pointer flex flex-col items-center"
                 >
                   <!-- ขยายขนาด SVG -->
@@ -100,11 +145,11 @@
                 >Cover Art (Optional)</label
               >
               <div
-                class="border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+                class="relative border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
               >
-                {{productForm.product_image}}
+                {{lyricsForm.product_image}}
                 <label
-                  for="{{productForm.product_image.id_for_label}}"
+                  for="{{lyricsForm.product_image.id_for_label}}"
                   class="cursor-pointer flex flex-col items-center"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"

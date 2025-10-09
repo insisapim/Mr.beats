@@ -1,5 +1,5 @@
 from django import template
-from ..forms import ProductForm
+from ..forms import ProductForm, LyricsForm
 
 register = template.Library()
 
@@ -9,4 +9,4 @@ def render_upload_beats(context):
 
 @register.inclusion_tag('upload_lyrics.html', takes_context=True)
 def render_upload_lyrics(context):
-    return {"productForm": ProductForm()}
+    return {"lyricsForm": LyricsForm()}
