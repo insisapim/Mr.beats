@@ -6,8 +6,8 @@
     <div class="md:col-span-2 space-y-6">
       <h1 class="text-3xl font-bold text-purple-400 mb-6">My Shopping Cart</h1>
       {% if cart_item %}
-      {% for i in cart_item %} 
-       <div class="flex justify-between items-center bg-gray-900/50 border border-gray-800 p-5 rounded-xl">
+      {% for i in cart_item %}
+      <div class="flex justify-between items-center bg-gray-900/50 border border-gray-800 p-5 rounded-xl">
         <div>
           <h2 class="text-xl font-semibold text-white">{{ i.product.title }}</h2>
           <p class="text-sm text-gray-400">by <span class="text-green-500">{{ i.product.seller }}</span></p>
@@ -15,16 +15,16 @@
         <div class="text-right">
           <p class="text-lg font-bold text-purple-400">{{ i.product.price }}</p>
           <a href="{% url 'cartdelete' i.id %}" class="text-sm text-red-500 hover:text-red-400">Delete</a>
-          
+
         </div>
-      </div>  
+      </div>
       {% endfor %}
       {% else %}
-        <p class="text-lg text-red-400">This Cart is Empty 😱</p>
+      <p class="text-lg text-red-400">This Cart is Empty 😱</p>
       {% endif %}
     </div>
 
-    <div class="bg-gray-900/60 border border-gray-800 p-6 rounded-xl h-fit">
+    <div class="bg-gray-900/60 border border-gray-800 p-6 rounded-xl h-fit text-center">
       <h2 class="text-xl font-semibold mb-4 text-white">Summary</h2>
 
       <div class="flex justify-between text-gray-400 mb-2">
@@ -40,14 +40,18 @@
         <span>${{total}}</span>
       </div>
 
-      <button class="w-full py-3 rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 transition">
-        Proceed to Checkout
-      </button>
+      <div class="flex justify-center">
+        <a href="{% url 'payments' total fee %}"
+          class="w-3/4 py-3 text-center rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 transition">
+          Proceed to Checkout
+        </a>
+      </div>
 
       <a href="{% url 'product_list' %}" class="block text-center mt-3 text-gray-400 hover:text-white">
         Continue Shopping
       </a>
     </div>
+
 
   </div>
 </div>

@@ -20,6 +20,7 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default='pending')
     order_status = models.CharField(max_length=10, choices=ORDER_STATUS, default='created')
     created_at = models.DateTimeField(auto_now_add=True)
+    fee = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
