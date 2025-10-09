@@ -14,11 +14,12 @@ class PaymentsView(View):
         cart = Cart.objects.filter(user=request.user).first()
         check_order = Order.objects.filter(buyer=cart.user, payment_status='pending').first()
         if check_order is None:
-            create_order = Order.objects.create(buyer=cart.user, total_price=total, fee=fee)
             cart_item = CartItem.objects.filter(cart=cart)
+            create_order = Order.objects.create(buyer=cart.user, total_price=total, fee=fee)
+            
             order_id = create_order.id
             for i in cart_item:
-                OrderItem.objects.create(order=create_order, product=i.product, unit_price=i.product.price)
+                OrderItem.objects.create(order=create_order, product=i.product, unit_price=i.product.price, seller=i.product.seller)
         else:
             order_id = check_order.id
         session = stripe.checkout.Session.create(
@@ -51,19 +52,23 @@ class PaymentSuccessView(View):
             return redirect('product_list')
         if order.payment_status == 'paid':
             return redirect('product_list')
-        print("in success")
         order = Order.objects.get(id=order_id)
         order.payment_status = 'paid'
         order.order_status = 'completed'
         order.save()
 
-        Payment.objects.create(order=order, user=order.buyer, amount=order.total_price, payment_method='credit', provider_payment_id='stripe_session', fee=order.fee)
+        Payment.objects.create(order=order, user=order.buyer, amount=order.total_price, payment_method='credit', provider='stripe_session', fee=order.fee)
+        print("Order.buyer ------>", order)
         cart = Cart.objects.filter(user=request.user).first()
         if cart:
             CartItem.objects.filter(cart=cart).delete()
-        return render(request, 'success.html')
+
+        
+        return render(request, 'success.html', {"user_id": order.buyer.id})
     
 class PaymentFailView(View):
     
     def get(self, request):
         return render(request, 'cancel.html')
+    
+

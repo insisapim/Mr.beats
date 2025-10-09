@@ -1,3 +1,4 @@
+from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 from .models import Product
 from .models import CartItem, Product, Cart
@@ -6,7 +7,7 @@ from decimal import Decimal
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from django.db.models import Q
-
+from orders.models import Order, OrderItem
 class HomepageView(View):
     def get(self, request):
         query = request.GET.get('q')
@@ -78,32 +79,15 @@ class ProductListView(View):
                 products = products.order_by(sort)
                 
         MAX_CHARS = 600  # limit ขนาดที่จะส่งไปยัง template
-
+        preview_text = ""
         for p in products:
             preview_text = ""
             if getattr(p, "lyrics_text", None):
-                preview_text = p.lyrics_text
-            elif p.preview_file:
-                name = p.preview_file.name.lower()
-                # ตรวจเบื้องต้นจากนามสกุลว่าเป็นไฟล์ข้อความ
-                if name.endswith((".txt", ".lyric", ".lrc", ".md")):
-                    try:
-                        # เปิดไฟล์จาก storage และอ่านเป็น bytes -> decode
-                        p.preview_file.open("rb")
-                        raw = p.preview_file.read()
-                        try:
-                            preview_text = raw.decode("utf-8")
-                        except UnicodeDecodeError:
-                            preview_text = raw.decode("latin-1", errors="replace")
-                    except Exception:
-                        preview_text = ""
-
-        if preview_text:
-            preview_text = preview_text.strip()
-            if len(preview_text) > MAX_CHARS:
-                preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
-        p.preview_text = preview_text
-
+                preview_text = p.lyrics_text.strip()
+                if len(preview_text) > MAX_CHARS:
+                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
+            p.preview_text = preview_text
+        
 
         genres = Genre.objects.all()
         return render(request, 'product_list.html', {"product": products, "genres" : genres})
@@ -232,4 +216,25 @@ class CartDeleteView(View):
 #         request.session.flush()
 #         return redirect('cart')
 
-        
+class DowloadView(View):
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            user_id = request.user.id
+            order = OrderItem.objects.filter(order__buyer=user_id).distinct('product__title')
+            return render(request, 'dowload.html', {"data":order, "user_id":user_id})    
+        return render(request, 'login.html')
+    
+    def post(self, request):
+        product_id = request.POST.get('item_id')
+        userid = request.POST.get('user_id')
+        print("product_id L", product_id)
+        print("userid L", userid)
+        if request.user.is_authenticated:
+            try:
+                product = Product.objects.get(id=product_id)
+                file_path = product.file.path
+                return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=product.title + '.mp3')
+            except OrderItem.DoesNotExist:
+                raise Http404("File not found.")
+        return redirect('dowload')
