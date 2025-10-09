@@ -164,6 +164,7 @@ myenv/
 
 # Django static and media files
 media/
+media/*
 static/
 
 # Ignore Django migration files in all apps
