@@ -10,4 +10,5 @@ urlpatterns = [
         path("cart/delete/<int:id>", views.CartDeleteView.as_view(), name="cartdelete"),
         path("editproduct/<int:id>", views.EditProductView.as_view(), name="edit-product"),
         path("editproduct/<int:id>/delete/", views.DeleteProductView.as_view(), name="delete-product"),
+        path("dowload/", views.DowloadView.as_view(), name="dowload"),
 ]

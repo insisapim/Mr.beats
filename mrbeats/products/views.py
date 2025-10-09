@@ -1,3 +1,4 @@
+from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 from .models import Product
 from .models import CartItem, Product, Cart
@@ -7,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
+from orders.models import Order, OrderItem
 
 class HomepageView(View):
     def get(self, request):
@@ -273,3 +275,25 @@ class DeleteProductView(View):
         return redirect('home')
 
 
+class DowloadView(View):
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            user_id = request.user.id
+            order = OrderItem.objects.filter(order__buyer=user_id).distinct('product__title')
+            return render(request, 'dowload.html', {"data":order, "user_id":user_id})    
+        return render(request, 'login.html')
+    
+    def post(self, request):
+        product_id = request.POST.get('item_id')
+        userid = request.POST.get('user_id')
+        print("product_id L", product_id)
+        print("userid L", userid)
+        if request.user.is_authenticated:
+            try:
+                product = Product.objects.get(id=product_id)
+                file_path = product.file.path
+                return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=product.title + '.mp3')
+            except OrderItem.DoesNotExist:
+                raise Http404("File not found.")
+        return redirect('dowload')

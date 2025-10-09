@@ -1,0 +1,54 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen bg-[#0b0b0b] text-gray-200 py-12 px-6">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <h1 class="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 mb-2">
+      My Downloads
+    </h1>
+    <p class="text-gray-400 mb-8">Access all your purchased beats and music files</p>
+
+    <!-- MOCK ITEM 1 -->
+    {% for i in data %}
+    <div >
+      <div class="flex flex-col md:flex-row items-center justify-between bg-gray-900/60 border border-purple-900/20 rounded-2xl p-6 mb-6">
+        <div class="flex items-start gap-5 w-full md:w-2/3">
+          <img src="{% static 'images/mock_cover1.jpg' %}" alt="Midnight Vibes" class="w-28 h-28 rounded-lg object-cover border border-gray-700">
+          <div>
+            <h2 class="text-2xl font-semibold text-white">{{i.product.title}}</h2>
+            <p class="text-sm text-gray-400 mt-1">By <span class="font-bold">{{i.seller.username}}</span></p>
+            <p class="text-sm text-gray-500 mt-2">Purchased on {{i.order.created_at}}</p>
+            
+            <p class="text-sm text-gray-400 mt-3">Available Formats:</p>
+            <div class="flex gap-2 mt-2">
+              <form action="{% url 'dowload' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" class="hidden" value="{{i.product.id}}" name="item_id">
+                <input type="text" class="hidden" value="{{user_id}}" name="user_id">
+                <button type="submit" class="bg-gray-800 hover:bg-gray-700 text-sm px-3 py-1 rounded-lg flex items-center gap-2">⬇ Download MP3</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating box -->
+        <div class="mt-4 md:mt-0 flex flex-col items-end">
+          <span class="text-sm text-gray-400 mb-2">Rate this beat</span>
+          <div class="flex items-center space-x-1">
+            <!-- Mock rating buttons (no logic yet) -->
+            <button class="text-2xl text-yellow-400">★</button>
+            <button class="text-2xl text-yellow-400">★</button>
+            <button class="text-2xl text-yellow-400">★</button>
+            <button class="text-2xl text-gray-600 hover:text-yellow-400">★</button>
+            <button class="text-2xl text-gray-600 hover:text-yellow-400">★</button>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">Your rating: <span class="text-white font-semibold">3</span>/5</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
