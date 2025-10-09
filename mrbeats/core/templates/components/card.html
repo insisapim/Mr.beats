@@ -123,6 +123,47 @@
           </svg>
           Add to Cart
         </button>
+              <path
+                d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
+              />
+            </svg>
+          </button>
+          {% if product.seller == request.user %}
+          <a
+          href="{%url 'edit-product' id=product.id%}"
+            class="inline-flex items-center gap-2 bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-pencil"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"
+              />
+            </svg>
+            Edit
+          </a>
+          {% else %}
+          <button
+            class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Add to Cart
+          </button>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>

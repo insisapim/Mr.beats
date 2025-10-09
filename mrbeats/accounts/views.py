@@ -53,7 +53,18 @@ class ProfileView(View):
             avg_rating=Avg('rating'),
         )
         avg_rating = user_rating['avg_rating'] or 0
-        return render(request, 'profile.html', {"profileinfo": user, "product": products, "prodcount": prodcount, "totalearn": totalearn, "user_rating": avg_rating})
+        MAX_CHARS = 600  # limit ขนาดที่จะส่งไปยัง template
+
+        for p in products:
+            preview_text = ""
+            if getattr(p, "lyrics_text", None):
+                preview_text = p.lyrics_text.strip()
+                if len(preview_text) > MAX_CHARS:
+                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
+            p.preview_text = preview_text
+
+        return render(request, 'profile.html', {"profileinfo": user, "product": products, "prodcount": prodcount, "totalearn": totalearn, "user_rating": avg_rating, "context": context})
+
     
 
 class EditProfileView(View):
