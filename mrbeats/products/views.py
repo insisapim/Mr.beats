@@ -90,8 +90,7 @@ class CartAddView(View):
         if request.user.is_authenticated:
             cart = Cart.objects.filter(user=request.user).first()
             if cart is None:
-                create_cart = Cart(user=request.user)
-                create_cart.save()
+                cart = Cart.objects.create(user=request.user)
             cart_items = CartItem.objects.filter(cart=cart)
             get_product = Product.objects.get(id=product_id)
             

@@ -10,3 +10,5 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD)
     provider_payment_id = models.CharField(max_length=200, blank=True, null=True)  # transaction id from gateway
     created_at = models.DateTimeField(auto_now_add=True)
+    fee = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+
