@@ -78,7 +78,6 @@ class ProductListView(View):
                 products = products.order_by(sort)
                 
         MAX_CHARS = 600  # limit ขนาดที่จะส่งไปยัง template
-
         for p in products:
             preview_text = ""
             if getattr(p, "lyrics_text", None):
@@ -86,7 +85,6 @@ class ProductListView(View):
                 if len(preview_text) > MAX_CHARS:
                     preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
             p.preview_text = preview_text
-
 
         genres = Genre.objects.all()
         return render(request, 'product_list.html', {"product": products, "genres" : genres})
@@ -214,7 +212,6 @@ class CartDeleteView(View):
 #     def get(self, request):
 #         request.session.flush()
 #         return redirect('cart')
-
 class EditProductView(View):
 
     def get(self, request, id):

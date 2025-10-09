@@ -1,148 +1,222 @@
-{% extends 'layouts/base.html' %} 
+{% extends 'layouts/base.html' %}
 {% block title %}Mr.Beats - Browse{% endblock %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Browse Beats</title>
-  </head>
-  {% block content %}
-  <body class="bg-gray-900 text-white">
-    <div class="container mx-auto px-4 py-8">
-      <!-- Heading -->
-      <div class="mb-6">
-        <h1 class="text-3xl font-bold">
-          Browse <span class="text-purple-500">Beats</span>
-        </h1>
-        <p class="text-gray-400 mt-2">
-          Discover premium beats from talented producers worldwide
-        </p>
-      </div>
 
-      <div class="flex flex-col md:flex-row gap-6">
-        <!-- Filters Sidebar -->
-        <div class="w-full md:w-1/4 bg-gray-800 p-4 rounded-lg space-y-4">
-            <div class="flex gap-1 items-center">
-                <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
-                    <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"/>
-                    </svg>
-                </span>
-                <h2 class="font-semibold">Filters</h2>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Beats</title>
+</head>
+{% block content %}
+
+<body class="bg-gray-900 text-white">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Heading -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold">
+        Browse <span class="text-purple-500">Beats</span>
+      </h1>
+      <p class="text-gray-400 mt-2">
+        Discover premium beats from talented producers worldwide
+      </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-6">
+      <!-- Filters Sidebar -->
+      <div class="w-full md:w-1/4 bg-gray-800 p-4 rounded-lg space-y-4">
+        <div class="flex gap-1 items-center">
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel"
+              viewBox="0 0 16 16">
+              <path
+                d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z" />
+            </svg>
+          </span>
+          <h2 class="font-semibold">Filters</h2>
+        </div>
+        <form id="filters-form" method="get" action="{%url 'product_list' %}">
+          <div>
+            <h2 class="font-semibold mb-2">Product Type</h2>
+            <ul class="flex space-x-2 text-gray-300 items-center">
+              <li><label><input type="radio" name="type" value="all" {% if current_type == 'all' %}checked{% endif %}/> All</label></li>
+              <li><label><input type="radio" name="type" value="beats" {% if current_type == 'beats' %}checked{% endif %}/> Beats</label></li>
+              <li><label><input type="radio" name="type" value="lyrics" {% if current_type == 'lyrics' %}checked{% endif %}/> Lyrics</label></li>
+            </ul>
+          </div>
+
           <!-- Genre -->
           <div>
             <h2 class="font-semibold mb-2">Genre</h2>
             <ul class="space-y-1 text-gray-300">
-              <li>
-                <label><input type="radio" name="genre" checked /> All</label>
-              </li>
-              <li>
-                <label><input type="radio" name="genre" /> Hip Hop</label>
-              </li>
-              <li>
-                <label><input type="radio" name="genre" /> Trap</label>
-              </li>
-              <li>
-                <label><input type="radio" name="genre" /> R&B</label>
-              </li>
-              <li>
-                <label><input type="radio" name="genre" /> Electronic</label>
-              </li>
-              <li>
-                <label><input type="radio" name="genre" /> Pop</label>
-              </li>
-              <li>
-                <label><input type="radio" name="genre" /> Rock</label>
-              </li>
-              <li>
-                <label><input type="radio" name="genre" /> Jazz</label>
-              </li>
-            </ul>
+              <li><label><input type="radio" name="genre" value="all" {% if current_genre == 'all' %} checked {% endif %}/> All</label></li>
+              {% for genre in genres%}
+              <li><label><input type="radio" name="genre" value="{{genre.name}}" {% if current_genre == '{{genre.name}}' %} checked {% endif %}/> {{genre.name}} </label></li>
+              {% endfor %}
           </div>
 
           <!-- Price Range -->
           <div>
             <h2 class="font-semibold mb-2">Price Range</h2>
             <ul class="space-y-1 text-gray-300">
-              <li>
-                <label><input type="radio" name="price" checked /> All</label>
-              </li>
-              <li>
-                <label><input type="radio" name="price" /> $0-$25</label>
-              </li>
-              <li>
-                <label><input type="radio" name="price" /> $25-$50</label>
-              </li>
-              <li>
-                <label><input type="radio" name="price" /> $50-$100</label>
-              </li>
-              <li>
-                <label><input type="radio" name="price" /> $100+</label>
-              </li>
+              <li><label><input type="radio" name="price" value="all" {% if current_price == 'all' %}checked{% endif %}/> All</label></li>
+              <li><label><input type="radio" name="price" value="0-25" {% if current_price == '0-25' %}checked{% endif %}/> ฿0-฿25</label></li>
+              <li><label><input type="radio" name="price" value="25-50" {% if current_price == '25-50' %}checked{% endif %}/> ฿25-฿50</label></li>
+              <li><label><input type="radio" name="price" value="50-100" {% if current_price == '50-100' %}checked{% endif %}/> ฿50-฿100</label></li>
+              <li><label><input type="radio" name="price" value="100+" {% if current_price == '100+' %}checked{% endif %}/> ฿100+</label></li>
             </ul>
           </div>
         </div>
 
         <!-- Main Content -->
+         
         <div class="flex-1">
-          <!-- Search + Sort -->
-          <div
-            class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4"
-          >
-            <input
-              type="text"
-              placeholder="Search beats, producers..."
-              class="flex-1 p-2 rounded-lg text-gray-900"
-            />
-            <div class="flex gap-2">
-              <button class="bg-purple-500 text-white px-3 py-2 rounded-lg">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-grid-3x3"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M0 1.5A1.5 1.5 0 0 1 1.5 0h13A1.5 1.5 0 0 1 16 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5zM1.5 1a.5.5 0 0 0-.5.5V5h4V1zM5 6H1v4h4zm1 4h4V6H6zm-1 1H1v3.5a.5.5 0 0 0 .5.5H5zm1 0v4h4v-4zm5 0v4h3.5a.5.5 0 0 0 .5-.5V11zm0-1h4V6h-4zm0-5h4V1.5a.5.5 0 0 0-.5-.5H11zm-1 0V1H6v4z"
-                  />
-                </svg>
-              </button>
-              <button class="bg-gray-700 text-white px-3 py-2 rounded-lg">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-list-ul"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2m0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2"
-                  />
-                </svg>
-              </button>
-              <select class="bg-gray-700 text-white px-3 py-2 rounded-lg">
-                <option>Sort by</option>
-                <option>Price</option>
-                <option>BPM</option>
-                <option>Rating</option>
-              </select>
+           <!-- Search + Sort -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+              <input type="text" name="search" placeholder="Search beats, producers..." class="flex-1 p-2 rounded-lg text-gray-900"
+                    id="search"
+                    autocomplete="search" value="{{ search }}" 
+                    title="Filter data" />
+              <div class="flex gap-2">
+                <button type="submit" class="px-3 py-1 bg-purple-600 text-white rounded">Apply</button>
+                <select class="bg-gray-700 text-white px-3 py-2 rounded-lg" name="sort">
+                  <option value="">Sort by</option>
+                  <option value="price">Price</option>
+                  <option value="bpm">BPM</option>
+                  <option value="rating">Rating</option>
+                </select>
+              </div>
             </div>
-          </div>
+          </form>
 
-          <!-- Cards Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for beat in beats %} {% include 'components/card.html' with
-            title="" owner="" times="" review_score="" downloads="" price=""%}
-            {% endfor %}
-          </div>
+        <!-- Cards Grid -->
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {%include 'components/lyrics_modal.html' %}
+          {% for beat in product %}
+
+          {% if beat.lyrics_text == "" %}
+
+          {% include 'components/card.html' with product=beat %}
+
+          {% else%}
+
+          {% include 'components/lyricscard.html' with product=beat %}
+
+          {% endif %}
+
+          {% endfor %}
+
         </div>
+        
       </div>
     </div>
-  </body>
-  {% endblock %}
+  </div>
+</body>
+<script>
+(function () {
+  let currentAudio = null;
+  let currentBtn = null;
+
+  document.querySelectorAll(".play-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.productId;
+      const audio = document.getElementById("audio-" + id);
+      const progressEl = document.getElementById("progress-" + id);
+      if (!audio || !progressEl) return;
+
+      // หยุด audio ตัวก่อน
+      if (currentAudio && currentAudio !== audio) {
+        currentAudio.pause();
+        document.getElementById(
+          "progress-" + currentBtn.dataset.productId
+        ).style.width = "0%";
+        currentBtn.querySelector(".play-icon").innerHTML =
+          '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+      }
+
+      if (audio.paused) {
+        await audio.play().catch((err) => console.error(err));
+        currentAudio = audio;
+        currentBtn = btn;
+        btn.querySelector(".play-icon").innerHTML =
+          '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>';
+      } else {
+        audio.pause();
+        btn.querySelector(".play-icon").innerHTML =
+          '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+        currentAudio = null;
+        currentBtn = null;
+        progressEl.style.width = "0%";
+      }
+
+      // อัปเดต progress
+      audio.addEventListener("timeupdate", () => {
+        if (!audio.duration) return;
+        progressEl.style.width =
+          (audio.currentTime / audio.duration) * 100 + "%";
+      });
+
+      audio.addEventListener("ended", () => {
+        progressEl.style.width = "0%";
+        btn.querySelector(".play-icon").innerHTML =
+          '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+        currentAudio = null;
+        currentBtn = null;
+      });
+    });
+  });
+})();
+
+(function () {
+  const modal = document.getElementById('lyrics-modal');
+  const panel = document.getElementById('lyrics-modal-panel');
+  const backdrop = document.getElementById('lyrics-modal-backdrop');
+  const closeBtn = document.getElementById('lyrics-modal-close');
+  const contentEl = document.getElementById('lyrics-modal-content');
+
+  function openModal(text) {
+    contentEl.textContent = text || 'No lyrics available.';
+    modal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      panel.classList.remove('scale-95', 'opacity-0');
+      panel.classList.add('scale-100', 'opacity-100');
+      document.documentElement.classList.add('overflow-hidden');
+    });
+  }
+
+  function closeModal() {
+    panel.classList.remove('scale-100', 'opacity-100');
+    panel.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      contentEl.textContent = '';
+      document.documentElement.classList.remove('overflow-hidden');
+    }, 180);
+  }
+
+  // delegated: เปิด modal เมื่อกดปุ่ม .lyrics-btn
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.lyrics-btn');
+    if (!btn) return;
+    e.preventDefault();
+    const id = btn.dataset.productId;
+    const src = document.getElementById('lyrics-' + id);
+    if (!src) {
+      openModal('No lyrics available.');
+      return;
+    }
+    const text = src.innerText?.trim() || '';
+    openModal(text);
+  });
+
+  // ปิด modal
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+})();
+</script>
+{% endblock %}
+
 </html>

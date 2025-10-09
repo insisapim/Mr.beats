@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% block title %}All Beats - MyBeats{% endblock %}
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +29,7 @@
       </div>
       <div class="bg-[#121212] border border-gray-800 rounded-xl p-6 flex flex-col items-center">
         <span class="text-gray-400 text-sm">Avg. Budget</span>
-        <span class="text-2xl font-bold mt-2">${{avg_budget.wages__avg|floatformat:2}}</span>
+        <span class="text-2xl font-bold mt-2">${{avg_budget.wages__avg|floatformat:2|intcomma}}</span>
       </div>
       <div class="bg-[#121212] border border-gray-800 rounded-xl p-6 flex flex-col items-center">
         <span class="text-gray-400 text-sm">New This Week</span>
@@ -50,7 +51,7 @@
           </div>
         </div>
         <div class="flex flex-col items-end mt-4 sm:mt-0">
-          <span class="text-purple-400 font-bold text-xl">${{contract.wages}}</span>
+          <span class="text-purple-400 font-bold text-xl">${{contract.wages|intcomma}}</span>
           <span class="text-sm text-gray-500">Budget</span>
           <form method="POST" action="{% url 'contract' %}" >
             {% csrf_token %}

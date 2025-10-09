@@ -7,6 +7,8 @@ from .models import *
 from payments.models import Payment
 from reviews.models import Review
 from django.db.models import Avg, Count, Min, Sum
+from django.db.models.functions import TruncMonth
+import json
 
 
 class LoginView(View):
@@ -20,8 +22,7 @@ class LoginView(View):
             user = form.get_user() 
             login(request,user)
             return redirect('home')  
-
-        return render(request,'register.html', {"form":form})
+        return render(request, 'login.html', {"form": form})
 
 class RegisterView(View):
     def get(self, request):
@@ -32,7 +33,7 @@ class RegisterView(View):
         form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('login')
         return render(request, 'register.html', {"form": form})
 
 class LogoutView(View):
@@ -42,6 +43,37 @@ class LogoutView(View):
     
 class ProfileView(View):
     def get(self, request, id):
+        earnings_qs = (Payment.objects
+                   .filter(user_id=id)
+                   .annotate(month=TruncMonth('created_at'))
+                   .values('month')
+                   .annotate(total=Sum('amount'))
+                   .order_by('month'))
+
+        months = [p['month'].strftime('%Y-%m') for p in earnings_qs]
+        earnings = [float(p['total']) for p in earnings_qs]
+
+        # rating distribution (count per rating value 1..5)
+        ratings = (Review.objects
+                .filter(product__seller_id=id)
+                .values('rating')
+                .annotate(cnt=Count('id'))
+                .order_by('rating'))
+        # build dict for 1..5
+        rating_counts = {i: 0 for i in range(1, 6)}
+        for r in ratings:
+            rating_counts[r['rating']] = r['cnt']
+        rating_labels = list(rating_counts.keys())
+        rating_values = list(rating_counts.values())
+
+        context = {
+        'months_json': json.dumps(months),
+        'earnings_json': json.dumps(earnings),
+        'rating_labels_json': json.dumps(rating_labels),
+        'rating_values_json': json.dumps(rating_values),
+        # ส่งข้อมูลอื่น ๆ ที่ต้องการไปด้วย
+    }
+        
         user = User.objects.get(id=id)
         products = user.products.all()
         prodcount = user.products.all().count()
