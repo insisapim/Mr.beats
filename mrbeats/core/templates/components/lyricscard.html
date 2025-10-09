@@ -101,7 +101,7 @@
           </button>
           {% if product.seller == request.user %}
           <a
-            href="#"
+            href="{% url 'edit-product' id=product.id%}"
             class="inline-flex items-center gap-2 bg-gradient-to-tr from-yellow-500 to-yellow-200 text-black px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
           >
             <svg

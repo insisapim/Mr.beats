@@ -6,6 +6,7 @@ from decimal import Decimal
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from django.db.models import Q
+from django.core.exceptions import PermissionDenied
 
 class HomepageView(View):
     def get(self, request):
@@ -225,3 +226,50 @@ class EditProductView(View):
                 productForm = LyricsForm(instance=product)
 
         return render(request, 'editproduct.html', {"productForm": productForm})
+    
+    def post(self, request, id):
+        if request.user.is_authenticated:
+            license_type = request.POST.get('license_type')
+            prod = Product.objects.get(id=id)
+            if prod.lyrics_text == "":
+                form = EditProductForm(request.POST or None, request.FILES or None, instance=prod)
+            else:
+                form = EditLyricsForm(request.POST or None, request.FILES or None, instance=prod)
+            if form.is_valid():
+                product = form.save(commit=False)
+                product.seller = request.user
+                if prod.lyrics_text == "":
+                    product.license_type = "exclusive"
+                if license_type == "royalty_free":
+                    product.price = 0
+                product.save()
+                form.save_m2m()
+                return redirect('home')
+            else:
+                raise ValidationError(form.errors);
+
+class DeleteProductView(View):
+
+    def post(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        prod = Product.objects.get(id=id)
+
+        if prod.seller_id != request.user.id:
+            raise PermissionDenied("You cannot delete this product")
+
+        # ลบไฟล์ที่เกี่ยวข้อง (ถ้ามี)
+        try:
+            if prod.file:
+                prod.file.delete(save=False)
+            if prod.preview_file:
+                prod.preview_file.delete(save=False)
+            if prod.product_image:
+                prod.product_image.delete(save=False)
+        except Exception as e:
+            print("Error deleting files:", e)
+
+        prod.delete()
+        return redirect('home')
+
+
