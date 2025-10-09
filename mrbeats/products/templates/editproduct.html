@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %} 
 {% block title %}Mr.Beats - UploadBeats{%endblock %} {% block content %} 
-{%if productForm.lyrics_text == "" %}
+{%if product.lyrics_text == "" %}
 <body class="bg-gray-900 text-gray-100 font-sans">
   <div class="max-w-4xl mx-auto py-12 px-4">
     <div class="mb-6">
@@ -10,6 +10,7 @@
     </div>
     <!-- Upload Beat Form -->
     {{ form.non_field_errors }}
+    <section class="p-6 rounded-lg space-y-6 bg-gray-800">
     <form
       method="POST"
       enctype="multipart/form-data"
@@ -259,6 +260,7 @@
       action="{% url 'delete-product' productForm.instance.pk %}"
       method="post"
       onsubmit="return confirm('แน่ใจจะลบสินค้านี้?');"
+      class="text-right mr-6"
     >
       {% csrf_token %}
       <button
@@ -269,6 +271,7 @@
       </button>
     </form>
     {% endif %}
+    </section>
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -512,7 +515,7 @@
           type="submit"
           class="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded font-semibold"
         >
-          Upload Lyrics
+          Update
         </button>
       </div>
     </form>

@@ -227,13 +227,13 @@ class EditProductView(View):
             else:
                 productForm = LyricsForm(instance=product)
 
-        return render(request, 'editproduct.html', {"productForm": productForm})
+        return render(request, 'editproduct.html', {"productForm": productForm, "product": product})
     
     def post(self, request, id):
         if request.user.is_authenticated:
             license_type = request.POST.get('license_type')
             prod = Product.objects.get(id=id)
-            if prod.lyrics_text == "":
+            if prod.lyrics_text == "" :
                 form = EditProductForm(request.POST or None, request.FILES or None, instance=prod)
             else:
                 form = EditLyricsForm(request.POST or None, request.FILES or None, instance=prod)
