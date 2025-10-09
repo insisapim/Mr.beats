@@ -1,0 +1,59 @@
+{% extends 'layouts/base.html' %} {%block title%}Mr.Beats-EditProfile{% endblock%} 
+{% block content %}
+<div class="bg-gray-900 text-gray-100 min-h-screen flex justify-center items-center py-10 px-4">
+  <div class="w-full max-w-lg bg-gray-800 rounded-2xl shadow-lg p-8">
+    <h1 class="text-2xl font-bold mb-6 text-center text-white">Edit Account Information</h1>
+
+    <form method="POST" class="space-y-5">
+      {% csrf_token %}
+      <!-- Username -->
+      <div>
+        <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Username</label>
+        {{ form.username}}
+      </div>
+
+      <!-- First name -->
+      <div>
+        <label for="id_first_name" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
+        {{ form.first_name}}
+      </div>
+
+      <!-- Last name -->
+      <div>
+        <label for="id_last_name" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
+        {{ form.last_name}}
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="id_email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+        {{ form.email}}
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="id_password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+        {{ form.password }}
+        <p class="text-gray-400 text-xs mt-1">Leave blank if you don’t want to change it.</p>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="flex justify-center">
+        <button
+          type="submit"
+          class="w-full py-2.5 rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white font-semibold shadow-md hover:opacity-90 transition"
+        >
+          Save Changes
+        </button>
+      </div>
+    </form>
+
+    <!-- Back Button -->
+    <div class="text-center mt-4">
+      <a href="{% url 'profile' id=request.user.id %}" class="text-gray-400 hover:text-purple-400 text-sm transition">
+        ← Back to Profile
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -4,21 +4,24 @@
     {{ form.non_field_errors }}
     <form
       method="POST"
-      action="{% url 'upload_beat' %}"
+      action="{% url 'uploads' %}"
       enctype="multipart/form-data"
       class="bg-gray-800 p-6 rounded-lg space-y-6"
     >
       {% csrf_token %}
 
+
+      <input type="hidden" name="upload_type" value="beat">
       <!-- File Upload & Cover Art -->
       <section class="grid grid-cols-2 gap-6">
+        
         <div class="">
           <!-- Beat File -->
 
           <div>
             <label class="block mb-2 font-semibold">Beat File (MP3, WAV)</label>
             <div
-              class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+              class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
             >
               {{productForm.file}}
 
@@ -60,7 +63,7 @@
               ผู้ซื้อจะได้ฟังสินค้าของคุณที่นี่
             </p>
             <div
-              class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+              class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
             >
               {{productForm.preview_file}}
 
@@ -100,7 +103,7 @@
               >Cover Art (Optional)</label
             >
             <div
-              class="border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500"
+              class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500"
             >
               {{productForm.product_image}}
               <label
@@ -158,6 +161,7 @@
             {{productForm.theme.errors}}
             <label class="block mb-2 font-semibold">Theme</label>
             {{productForm.theme}}
+            <p class="text-sm text-gray-400 mt-1">เลือกได้หลายอย่าง เช่น Sad, Chill, Party</p>
           </div>
 
           <div class="mt-6">
