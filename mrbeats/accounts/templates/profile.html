@@ -51,6 +51,12 @@
           </div>
         </div>
         <div class="flex flex-row space-x-2">
+          <a href="{%url 'dowload' %}"  class="bg-[#09090b] hover:bg-gray-600 px-4 py-2 rounded border">
+            My Dowloads
+          </a>
+          <a href="{%url 'mycontract' %}"  class="bg-[#09090b] hover:bg-gray-600 px-4 py-2 rounded border">
+            My Contract
+          </a>
           <a
             href="{%url 'edit-profile' id=request.user.id %}"
             class="bg-[#09090b] hover:bg-gray-600 px-4 py-2 rounded border"

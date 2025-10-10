@@ -13,23 +13,8 @@ class UserForm(UserCreationForm):
         model = User
         fields = [
             "username",
-            "role"
+            "email"
         ]
-
-    role = forms.ChoiceField(
-        choices=User.ROLE_CHOICES,
-        widget=forms.Select(attrs={
-            'class': SELECT_CLASSES,
-        }),
-    )
-
-    password2 = forms.CharField(
-        label="Confirm password",
-        widget=forms.PasswordInput(attrs={
-            'class': INPUT_CLASSES,
-            'placeholder': 'Confirm your password'
-        })
-    )
     username = forms.CharField(
         label="Username",
         widget=forms.TextInput(attrs={
@@ -37,21 +22,51 @@ class UserForm(UserCreationForm):
             'placeholder': 'Enter yout username'
         })
     )
+
+    email = forms.CharField(
+        label="Email",
+        widget=forms.EmailInput(attrs={
+            'class': INPUT_CLASSES,
+            'placeholder': 'Enter yout email'
+        })
+    )
+
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(attrs={
             'class': INPUT_CLASSES,
-            'placeholder': 'Enter your password (min 8 chars)'
+            'placeholder': 'Enter your password'
         })
     )
-
+    password2 = forms.CharField(
+        label="Confirm password",
+        widget=forms.PasswordInput(attrs={
+            'class': INPUT_CLASSES,
+            'placeholder': 'Confirm your password'
+        })
+    )
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        email = cleaned_data.get('email')
+        get_user = User.objects.filter(email=email).first()
+        if get_user is not None:
+            self.add_error("email",
+                "email is already in use"
+            )
+        if not password1 and password1 != password2:
+            raise ValidationError(
+                "password must same"
+            )
+        return cleaned_data
 
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
         exclude = ("created_at", "username", "password", "date_joined", "is_active")
         widgets = {
-            "role": forms.TextInput(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500"}),
             "artist_name": forms.TextInput(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500"}),
             "bio": forms.Textarea(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500 h-32 resize-none"}),
             "profile_image": forms.ClearableFileInput(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500 h-32 resize-none opacity-0 absolute inset-0"}),

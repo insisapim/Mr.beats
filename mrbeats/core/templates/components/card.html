@@ -1,3 +1,5 @@
+{% load humanize %}
+
 <form action="{% url 'cartadd' product.id %}" method="POST">
   {% csrf_token %}
   <article
@@ -97,7 +99,7 @@
 
       <div class="flex items-center justify-between mt-4">
         <div>
-          <div class="text-xl font-bold text-white">${{ product.price }}</div>
+          <div class="text-xl font-bold text-white">${{ product.price|intcomma }}</div>
         </div>
         <div class="flex items-center gap-3">
           {% if product.seller == request.user %}

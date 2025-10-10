@@ -16,8 +16,8 @@
     <div class="p-6 flex items-center justify-center ">
         <div
             class="w-[500px] p-8 rounded-xl shadow-2xl bg-gray-800 bg-opacity-30 border border-purple-500/50 backdrop-blur-sm text-white ">
-            <h2 class="text-3xl font-bold text-center mb-8 text-white">Create a Contract Request</h2>
-            <form method="POST" action="{% url 'createcontract' %}">
+            <h2 class="text-3xl font-bold text-center mb-8 text-white">Edit a Contract</h2>
+            <form method="POST" action="{% url 'editcontract' contract_id %}">
                 {% csrf_token %}
                 <div>
                     <label for="{{ form.title.id_for_label }}">Job Title :</label>
@@ -39,8 +39,8 @@
                 <span class="text-red-400">{{ form.non_field_errors }}</span>
                 <div class="flex flex-cols gap-2 items-center mt-6">
                     <button type="submit"
-                        class="w-full py-3 px-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg">Post
-                        Contract</button>
+                        class="w-full py-3 px-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg">Save
+                        Changed</button>
                     <a href="{% url 'contract' %}"
                         class="w-full text-center py-3 px-4 bg-gradient-primary hover:opacity-100 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg">Back</a>
                 </div>

@@ -40,17 +40,27 @@
         <span>Total</span>
         <span>${{total|floatformat:2|intcomma}}</span>
       </div>
-
+      {% if cart_item %}
       <div class="flex justify-center">
-        <a href="{% url 'payments' total fee %}"
-          class="w-3/4 py-3 text-center rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 transition">
-          Proceed to Checkout
-        </a>
-      </div>
-
+          <form action="{% url 'payments' %}" method="POST">
+            {% csrf_token %}
+            <button class="p-4 w-full py-3 rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 transition">
+            🤑 Proceed to Checkout 🤑
+          </button>
+          <input type="number" class="hidden" name="total" id="total" value="{{total}}">
+          <input type="number" class="hidden" name="fee" id="fee" value="{{fee}}">
+          </form>
+          
+        </div>
       <a href="{% url 'product_list' %}" class="block text-center mt-3 text-gray-400 hover:text-white">
         Continue Shopping
       </a>
+      {% else %}
+        <p class="p-4 w-full py-3 rounded-lg bg-gradient-to-tr from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 transition">🥹 Buy some beats 🥹</p>
+        <a href="{% url 'product_list' %}" class="block text-center mt-3 text-gray-400 hover:text-white">
+          Continue Shopping
+        </a>
+      {% endif %}
     </div>
 
 
