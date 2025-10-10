@@ -9,7 +9,7 @@ from .forms import *
 from django.db.models import Q
 from django.http import HttpResponseForbidden
 from orders.models import Order, OrderItem
-
+from reviews.models import Review
 class HomepageView(View):
     def get(self, request):
         products = Product.objects.all().order_by("-downloads")[:4]
@@ -125,95 +125,48 @@ class UploadView(LoginRequiredMixin, View):
             form.save_m2m()
             return redirect('home')
         else:
-            raise ValidationError(form.errors);
+            raise ValidationError(form.errors)
 
-class CartView(View):
+class CartView(LoginRequiredMixin, View):
    
     def get(self, request):
-        if request.user.is_authenticated:    
-            subtotal = 0  
-            cart = Cart.objects.filter(user=request.user).first()
-            print("user id", request.user.id)
-            if cart is None:
-                cart = Cart.objects.create(user=request.user)
-
-            cart_items = CartItem.objects.filter(cart=cart)
-            for i in cart_items:
-                # print("----------")
-                # print("product is :", item.product.title)
-                # print("buyer :", item.cart.user.username)
-                # print("seller :", item.product.seller.artist_name if item.product.seller.artist_name else item.product.seller.username)
-                # print("price :", item.product.price)
-                # print("----------")
-                subtotal += i.product.price
-            fee = float(subtotal) * 0.05
-            total = float(subtotal) + fee 
-            return render(request, 'cart.html', {'cart_item':cart_items, 'fee':fee, 'subtotal':subtotal, 'total':total})
-            # cart = request.session.get('cart', {})
-            # print("cart : ", cart)
-            # cart_item = []
-            # subtotal = 0
-            # for i in cart:
-            #     subtotal += Decimal(cart[i]['price'])
-            #     cart_item.append({
-            #         'id' : cart[i]['id'],
-            #         'title' : cart[i]['title'],
-            #         'seller_id' : cart[i]['seller_id'],
-        #         'seller' : cart[i]['seller'],
-        #         'price' : cart[i]['price']
-        #     })
-        # fee = float(subtotal) * 0.05
-        # total = float(subtotal) + fee 
-        # return render(request, 'cart.html', {'cart_item':cart_item, 'fee':fee, 'subtotal':subtotal, 'total':total})
-        return render(request, 'login.html')
+        subtotal = 0  
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart is None:
+            cart = Cart.objects.create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        for i in cart_items:
+            subtotal += i.product.price
+        fee = float(subtotal) * 0.05
+        total = float(subtotal) + fee 
+        return render(request, 'cart.html', {'cart_item':cart_items, 'fee':fee, 'subtotal':subtotal, 'total':total})
+    
 
     
-class CartAddView(View):
+class CartAddView(LoginRequiredMixin, View):
     def post(self, request, product_id):
-        if request.user.is_authenticated:
-            cart = Cart.objects.filter(user=request.user).first()
-            if cart is None:
-                cart = Cart.objects.create(user=request.user)
-            cart_items = CartItem.objects.filter(cart=cart)
-            get_product = Product.objects.get(id=product_id)
-            
-            for i in cart_items:
-                if product_id == i.product.id:
-                    print("already have this item")
-                    return redirect('product_list')       
-            add_cart_items = CartItem(cart=cart, product=get_product)
-            add_cart_items.save()
-            return redirect('cart')
-        #     product = Product.objects.get(id=product_id)
-        #     cart = request.session.get('cart', {})
-        #     if str(product_id) not in cart:
-        #         cart[str(product_id)] = {
-        #             'id' : product.id,
-        #             'title' : product.title,
-        #             'seller_id' : product.seller_id,
-        #             'seller' : product.seller.username,
-        #             'price' : str(product.price)
-        #         }
-        #         request.session['cart'] = cart
-        #         print(f"add {product.title} in cart")
-        #         return redirect('product_list')
-        #     else:         
-        #         print(f"{product.title} is already in cart")
-        #     return redirect('product_list')
-        return render(request, 'login.html')
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart is None:
+            cart = Cart.objects.create(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+        get_product = Product.objects.get(id=product_id)
+        
+        for i in cart_items:
+            if product_id == i.product.id:
+                print("already have this item")
+                return redirect('product_list')       
+        add_cart_items = CartItem(cart=cart, product=get_product)
+        add_cart_items.save()
+        return redirect('cart')
 
-class CartDeleteView(View):
+class CartDeleteView(LoginRequiredMixin, View):
 
     def get(self, request, id):
-        if request.user.is_authenticated:
-            cart = Cart.objects.filter(user=request.user).first()
-            cart_item = CartItem.objects.get(id=id, cart=cart)
-            print(f"Deleting item: {cart_item.product.title}")
-            cart_item.delete()
-            print("Item deleted successfully.")
-            return redirect('cart')
+        cart = Cart.objects.filter(user=request.user).first()
+        cart_item = CartItem.objects.get(id=id, cart=cart)
+        cart_item.delete()
+        return redirect('cart')
 
-        return render(request, 'login.html')
     
 
 # class ClearSession(View):
@@ -296,25 +249,41 @@ class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, View):
         return redirect('home')
 
 
-class DowloadView(View):
+class DowloadView(LoginRequiredMixin, View):
 
     def get(self, request):
-        if request.user.is_authenticated:
-            user_id = request.user.id
-            order = OrderItem.objects.filter(order__buyer=user_id).distinct('product__title')
-            return render(request, 'dowload.html', {"data":order, "user_id":user_id})    
-        return render(request, 'login.html')
+        user_id = request.user.id
+        order = OrderItem.objects.filter(order__buyer=user_id).distinct('product__title')
+        return render(request, 'dowload.html', {"data":order, "user_id":user_id})    
     
     def post(self, request):
         product_id = request.POST.get('item_id')
-        userid = request.POST.get('user_id')
-        print("product_id L", product_id)
-        print("userid L", userid)
-        if request.user.is_authenticated:
-            try:
-                product = Product.objects.get(id=product_id)
-                file_path = product.file.path
+        try:
+            product = Product.objects.get(id=product_id)
+            file_path = product.file.path
+            product.downloads += 1 
+            product.save()
+            if product.lyrics_text:
+                return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=product.title + '.txt')
+            else:
                 return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=product.title + '.mp3')
-            except OrderItem.DoesNotExist:
-                raise Http404("File not found.")
+        except OrderItem.DoesNotExist:
+            raise Http404("File not found.")
+
+class ReviewView(LoginRequiredMixin, View):
+
+    def post(self, request):
+        score = request.POST.get("score")
+        comment = request.POST.get("comment")
+        product_id = request.POST.get("product_id")
+        user = request.user
+        get_product = Product.objects.filter(id=product_id).first()
+        get_review = Review.objects.filter(product=get_product).first()
+        
+        if get_review is None:
+            Review.objects.create(product=get_product, reviewer=user, rating=score, comment=comment)
+        else:
+            get_review.rating = score
+            get_review.comment = comment
+            get_review.save()
         return redirect('dowload')

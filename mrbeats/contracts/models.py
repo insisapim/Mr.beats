@@ -17,9 +17,3 @@ class ContractWork(models.Model):
     deadline = models.DateTimeField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='requested')
     created_at = models.DateTimeField(auto_now_add=True)
-
-class ContractMessage(models.Model):
-    contract = models.ForeignKey(ContractWork, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    text = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
