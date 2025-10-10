@@ -1,7 +1,7 @@
 <form action="{% url 'cartadd' product.id %}" method="POST">
   {% csrf_token %}
   <article
-    class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm"
+    class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm h-full"
   >
     <div
       class="relative aspect-[1/1] rounded-t-xl overflow-hidden bg-center bg-cover"
@@ -58,9 +58,9 @@
       <h3 class="text-white font-semibold">{{ product.title }}</h3>
       <p class="text-sm text-gray-400">
         by
-        <span class="text-gray-200"
+        <a href="{%url 'profile' id=product.seller.id %}" class="text-gray-200"
           >{% if product.seller.artist_name %} {{ product.seller.artist_name }}
-          {% else %} {{ product.seller.username }} {% endif %}</span
+          {% else %} {{ product.seller.username }} {% endif %}</a
         >
       </p>
 
@@ -123,15 +123,9 @@
           <button
             class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
           >
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
+            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+          </svg>
             Add to Cart
           </button>
           {% endif %}

@@ -8,34 +8,43 @@
       {% csrf_token %}
       <!-- Username -->
       <div>
-        <label for="id_username" class="block text-sm font-medium text-gray-300 mb-1">Username</label>
+        <label for="{{form.username.id_for_label}}" class="block text-sm font-medium text-gray-300 mb-1">Username</label>
         {{ form.username}}
       </div>
 
       <!-- First name -->
       <div>
-        <label for="id_first_name" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
+        <label for="{{form.first_name.id_for_label}}" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
         {{ form.first_name}}
       </div>
 
       <!-- Last name -->
       <div>
-        <label for="id_last_name" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
+        <label for="{{form.last_name.id_for_label}}" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
         {{ form.last_name}}
       </div>
 
       <!-- Email -->
       <div>
-        <label for="id_email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+        <label for="{{form.email.id_for_label}}" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
         {{ form.email}}
       </div>
 
       <!-- Password -->
       <div>
-        <label for="id_password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+        <label for="{{form.password.id_for_label}}" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
         {{ form.password }}
         <p class="text-gray-400 text-xs mt-1">Leave blank if you don’t want to change it.</p>
       </div>
+
+      <!-- Comfirm Password -->
+      <div>
+        <label for="{{form.confirm_password.id_for_label}}" class="block text-sm font-medium text-gray-300 mb-1">Confirm Password</label>
+        {{ form.confirm_password }}
+        <p class="text-gray-400 text-xs mt-1">Leave blank if you don’t want to change it.</p>
+      </div>
+
+      {{ form.non_field_errors }}
 
       <!-- Submit Button -->
       <div class="flex justify-center">

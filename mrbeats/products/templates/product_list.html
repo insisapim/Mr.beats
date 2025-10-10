@@ -59,10 +59,10 @@
             <h2 class="font-semibold mb-2">Price Range</h2>
             <ul class="space-y-1 text-gray-300">
               <li><label><input type="radio" name="price" value="all" {% if current_price == 'all' %}checked{% endif %}/> All</label></li>
-              <li><label><input type="radio" name="price" value="0-25" {% if current_price == '0-25' %}checked{% endif %}/> ฿0-฿25</label></li>
-              <li><label><input type="radio" name="price" value="25-50" {% if current_price == '25-50' %}checked{% endif %}/> ฿25-฿50</label></li>
-              <li><label><input type="radio" name="price" value="50-100" {% if current_price == '50-100' %}checked{% endif %}/> ฿50-฿100</label></li>
-              <li><label><input type="radio" name="price" value="100+" {% if current_price == '100+' %}checked{% endif %}/> ฿100+</label></li>
+              <li><label><input type="radio" name="price" value="0-200" {% if current_price == '0-200' %}checked{% endif %}/> ฿0-฿200</label></li>
+              <li><label><input type="radio" name="price" value="200-500" {% if current_price == '200-500' %}checked{% endif %}/> ฿200-฿500</label></li>
+              <li><label><input type="radio" name="price" value="500-1000" {% if current_price == '500-1000' %}checked{% endif %}/> ฿500-฿1000</label></li>
+              <li><label><input type="radio" name="price" value="1000+" {% if current_price == '1000+' %}checked{% endif %}/> ฿1000+</label></li>
             </ul>
           </div>
         </div>
@@ -78,11 +78,15 @@
                     title="Filter data" />
               <div class="flex gap-2">
                 <button type="submit" class="px-3 py-1 bg-purple-600 text-white rounded">Apply</button>
+                <select class="bg-gray-700 text-white px-3 py-2 rounded-lg" name="sort-by">
+                  <option value="">ASC</option>
+                  <option value="-">DESC</option>
+                </select>
                 <select class="bg-gray-700 text-white px-3 py-2 rounded-lg" name="sort">
                   <option value="">Sort by</option>
                   <option value="price">Price</option>
                   <option value="bpm">BPM</option>
-                  <option value="rating">Rating</option>
+                  <option value="downloads">Downloads</option>
                 </select>
               </div>
             </div>
@@ -94,16 +98,17 @@
           {%include 'components/lyrics_modal.html' %}
           {% for beat in product %}
 
-          {% if beat.lyrics_text == "" %}
+            {% if beat.lyrics_text == "" %}
 
-          {% include 'components/card.html' with product=beat %}
+            {% include 'components/card.html' with product=beat %}
 
-          {% else%}
+            {% else%}
 
-          {% include 'components/lyricscard.html' with product=beat %}
+            {% include 'components/lyricscard.html' with product=beat %}
 
-          {% endif %}
-
+            {% endif %}
+          {% empty %}
+          <span>ไม่มีสินค้าที่คุณต้องการ</span>
           {% endfor %}
 
         </div>

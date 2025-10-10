@@ -1,5 +1,5 @@
-{% extends 'layouts/base.html' %} {%block title%}Mr.Beats-EditProfile{% endblock%} 
-{% block content %}
+{% extends 'layouts/base.html' %} {%block title%}Mr.Beats-EditProfile{%endblock%}
+ {% block content %}
 <div class="max-w-2xl mx-auto bg-gray-800 rounded-xl p-6 text-gray-100">
   <h2 class="text-2xl font-bold mb-6">Edit Profile</h2>
 
@@ -38,11 +38,28 @@
       <div
         class="relative border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
       >
-        {{form.profile_image}}
+        {{ form.profile_image}}
+        
+        {% if user.profile_image %}
+      <img
+        id="profilePreview"
+        src="{{ user.profile_image.url }}"
+        class="mt-4 max-h-48 rounded-lg border border-gray-700"
+        alt="Current Profile Image"
+      />
+    {% else %}
+      <img
+        id="profilePreview"
+        class="mt-4 max-h-48 rounded-lg hidden border border-gray-700"
+        alt="Profile Preview"
+      />
+    {% endif %}
+    
         <label
-          for="{{form.profile_image.id_for_label}}"
+          for="{{ form.profile_image.id_for_label }}"
           class="cursor-pointer flex flex-col items-center"
-          ><svg
+        >
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
             class="w-12 h-12 text-white mb-4"
@@ -56,6 +73,8 @@
           Upload Your Profile Image (JPG, PNG)
         </label>
       </div>
+
+      
     </div>
 
     <!-- Submit -->
@@ -69,4 +88,26 @@
     </div>
   </form>
 </div>
+<script>
+  const coverInput = document.getElementById(
+    "{{ form.profile_image.id_for_label }}"
+  );
+  const coverPreview = document.getElementById("profilePreview");
+
+  coverInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    console.log(file)
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        coverPreview.src = ev.target.result;
+        coverPreview.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      coverPreview.classList.add("hidden");
+      coverPreview.src = "";
+    }
+  });
+</script>
 {% endblock %}

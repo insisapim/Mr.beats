@@ -1,184 +1,163 @@
-
 <body class="bg-gray-900 text-gray-100 font-sans">
-    <div class="max-w-4xl mx-auto py-12 px-4">
+  <div class="max-w-4xl mx-auto py-12 px-4">
+    <!-- Upload Beat Form -->
+    {{ form.non_field_errors }}
+    <form
+      method="POST"
+      action="{% url 'uploads'%}"
+      enctype="multipart/form-data"
+      class="bg-gray-800 p-6 rounded-lg space-y-6"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="upload_type" value="lyrics" />
 
-      <!-- Upload Beat Form -->
-       {{ form.non_field_errors }}
-      <form
-        method="POST"
-        action="{% url 'uploads'%}"
-        enctype="multipart/form-data"
-        class="bg-gray-800 p-6 rounded-lg space-y-6"
-      >
-        {% csrf_token %}
-        <input type="hidden" name="upload_type" value="lyrics">
-
-        <!-- File Upload & Cover Art -->
-        <section class="grid grid-cols-2 gap-6">
-          
-          <!-- Beat Info -->
-          <div class="md:grid-cols-1 gap-6">
-            <div>
-              <label class="block mb-2 font-semibold">Lyrics</label>
-              {{lyricsForm.lyrics_text}}
-            </div>
-             <div class="mt-6">
-              <label class="block mb-2 font-semibold"
-                >Lyrics File (PDF, Txt, docx)</label
-              >
-              <div
-                class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
-              >
-                {{lyricsForm.file}}
-
-                <label
-                  for="{{lyricsForm.file.id_for_label}}"
-                  class="cursor-pointer flex flex-col items-center"
-                >
-                  <!-- ขยายขนาด SVG -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-12 h-12 text-white mb-4"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
-                    />
-                    <path
-                      d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
-                    />
-                  </svg>
-
-                  <!-- ข้อความ -->
-                  <span class="text-white text-2xl font-semibold"
-                    >Drop your lyrics here</span
-                  >
-                  <span class="text-gray-400 text-lg"
-                    >or click to browse files</span
-                  >
-                </label>
-              </div>
-            </div>
-          </div>
-
-          
-
-          <!-- Genre & BPM -->
-
-          <div class="">
-
-            <div>
-              <label class="block mb-2 font-semibold">Beat Title</label>
-              {{lyricsForm.title}}
-            </div>
-          
-            <div class="mt-6 gap-6">
-              <div>
-                <label class="block mb-2 font-semibold">Genre</label>
-                {{lyricsForm.genre}}
-              </div>
-            </div>
-
-            <!-- Mood/Vibe Tags -->
-            <div class="mt-6">
-              <label class="block mb-2 font-semibold">Theme</label>
-              {{lyricsForm.theme}}
-            </div>
-
-            <div class="mt-6" >
-                <label class="block mb-2 font-semibold">Price</label>
-                <div class="flex gap-2 items-center">
-                <span class="text-xl font-semibold">฿</span>
-              {{lyricsForm.price}}
-              </div>
-            </div>
-
-            <div class="mt-6">
-                <label class="block mb-2 font-semibold">Description</label>
-              {{lyricsForm.description}}
-            </div>
+      <!-- File Upload & Cover Art -->
+      <section class="grid grid-cols-2 gap-6">
+        <!-- Beat Info -->
+        <div class="md:grid-cols-1 gap-6 mt-6">
+          <div>
+            <label class="block mb-2 font-semibold">Beat Title</label>
+            {{lyricsForm.title}}
           </div>
           <div>
-              <label class="block mb-2 font-semibold"
-                >Preview File(PDF, Txt, docx) </label
-              >
-              <span class="text-gray-400 text-sm">แนะนำให้แสดงน้อยกว่าเนื้อเพลงจริง</span>
-              <div
-                class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
-              >
-                {{lyricsForm.preview_file}}
-
-                <label
-                  for="{{lyricsForm.preview_file.id_for_label}}"
-                  class="cursor-pointer flex flex-col items-center"
-                >
-                  <!-- ขยายขนาด SVG -->
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-12 h-12 text-white mb-4"
-                    fill="currentColor"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
-                    />
-                    <path
-                      d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
-                    />
-                  </svg>
-
-                  <!-- ข้อความ -->
-                  <span class="text-white text-2xl font-semibold"
-                    >Drop your lyrics here</span
-                  >
-                  <span class="text-gray-400 text-lg"
-                    >or click to browse files</span
-                  >
-                </label>
-              </div>
-            </div>
-
-            <!-- Cover Art -->
-            <div>
-              <label class="block mb-2 font-semibold mt-6"
-                >Cover Art (Optional)</label
-              >
-              <div
-                class="relative border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
-              >
-                {{lyricsForm.product_image}}
-                <label
-                  for="{{lyricsForm.product_image.id_for_label}}"
-                  class="cursor-pointer flex flex-col items-center"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    class="w-12 h-12 text-white mb-4"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                    <path
-                      d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
-                    />
-                  </svg>
-                  Upload cover art (JPG, PNG)
-                </label>
-              </div>
-            </div>
-        </section>
-        
-
-        <!-- Submit Button -->
-        <div class="text-right">
-          <button
-            type="submit"
-            class="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded font-semibold"
-          >
-            Upload Lyrics
-          </button>
+            <label class="block mb-2 font-semibold">Lyrics</label>
+            {{lyricsForm.lyrics_text}}
+          </div>
         </div>
-      </form>
-    </div>
-  </body>
 
+        <!-- Genre & BPM -->
+
+        <div class="">
+          <div class="mt-6 gap-6">
+            <div>
+              <label class="block mb-2 font-semibold">Genre</label>
+              {{lyricsForm.genre}}
+            </div>
+          </div>
+
+          <!-- Mood/Vibe Tags -->
+          <div class="mt-6">
+            <label class="block mb-2 font-semibold">Theme</label>
+            {{lyricsForm.theme}}
+          </div>
+
+          <div class="mt-6">
+            <label class="block mb-2 font-semibold">Price</label>
+            <div class="flex gap-2 items-center">
+              <span class="text-xl font-semibold">฿</span>
+              {{lyricsForm.price}}
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <label class="block mb-2 font-semibold">Description</label>
+            {{lyricsForm.description}}
+          </div>
+        </div>
+        <div class="mt-6">
+          <label class="block mb-2 font-semibold"
+            >Lyrics File (PDF, Txt, docx)</label
+          >
+          <div
+            class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+          >
+            {{lyricsForm.file}}
+
+            <label
+              for="{{lyricsForm.file.id_for_label}}"
+              class="cursor-pointer flex flex-col items-center"
+            >
+              <!-- ขยายขนาด SVG -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-12 h-12 text-white mb-4"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"
+                />
+                <path
+                  d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"
+                />
+              </svg>
+
+              <!-- ข้อความ -->
+              <span class="text-white text-2xl font-semibold"
+                >Drop your lyrics here</span
+              >
+              <span class="text-gray-400 text-lg"
+                >or click to browse files</span
+              >
+            </label>
+          </div>
+        </div>
+
+        <!-- Cover Art -->
+        <div>
+          <label class="block mb-2 font-semibold mt-6"
+            >Cover Art (Optional)</label
+          >
+          <div
+            class="relative border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
+          >
+            {{lyricsForm.product_image}}
+            <img
+              id="lyrics_imagePreview"
+              class="mt-4 max-h-48 rounded-lg hidden border border-gray-700"
+              alt="Product Image Preview"
+            />
+            <label
+              for="{{lyricsForm.product_image.id_for_label}}"
+              class="cursor-pointer flex flex-col items-center"
+              name="lyric_productimg"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                class="w-12 h-12 text-white mb-4"
+                viewBox="0 0 16 16"
+              >
+                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                <path
+                  d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"
+                />
+              </svg>
+              Upload cover art (JPG, PNG)
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Submit Button -->
+      <div class="text-right">
+        <button
+          type="submit"
+          class="bg-purple-500 hover:bg-purple-600 px-6 py-3 rounded font-semibold"
+        >
+          Upload Lyrics
+        </button>
+      </div>
+    </form>
+  </div>
+  <script>
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+  // หา preview image ของ input ใกล้ที่สุด
+  const preview = input.closest('div').querySelector('img');
+
+  input.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        preview.src = ev.target.result;
+        preview.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.classList.add("hidden");
+      preview.src = "";
+    }
+  });
+});
+  </script>
+</body>

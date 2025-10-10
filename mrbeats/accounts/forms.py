@@ -75,6 +75,15 @@ class AccountEditForm(forms.ModelForm):
         label="Password"
     )
 
+    confirm_password = forms.CharField(
+        required=False,
+        widget=forms.PasswordInput(attrs={
+            "class":"w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500",
+            "placeholder": "ยืนยันรหัสผ่านอีกครั้ง"
+        }),
+        label="Confirm Password"
+    )
+
     class Meta:
         model = User
         fields = ["username", "first_name", "last_name", "email"]
@@ -85,7 +94,6 @@ class AccountEditForm(forms.ModelForm):
             "last_name": forms.TextInput(attrs={"class":"w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"}),
             "email": forms.EmailInput(attrs={"class":"w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"}),
         }
-        
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -98,4 +106,14 @@ class AccountEditForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        
+        if password or confirm_password:
+            if password != confirm_password:
+                raise forms.ValidationError("รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน")
+        return cleaned_data
 

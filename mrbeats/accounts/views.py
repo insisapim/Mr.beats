@@ -2,13 +2,16 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout, login, update_session_auth_hash
 from django.views import View
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from accounts.forms import *
 from .models import *
 from payments.models import Payment
 from reviews.models import Review
-from django.db.models import Avg, Count, Min, Sum
+from orders.models import OrderItem
+from django.db.models import Avg, Count, Min, Sum, F
 from django.db.models.functions import TruncMonth
 import json
+from django.core.exceptions import PermissionDenied
 
 
 class LoginView(View):
@@ -43,15 +46,19 @@ class LogoutView(View):
     
 class ProfileView(View):
     def get(self, request, id):
-        earnings_qs = (Payment.objects
-                   .filter(user_id=id)
-                   .annotate(month=TruncMonth('created_at'))
-                   .values('month')
-                   .annotate(total=Sum('amount'))
-                   .order_by('month'))
+        earnings_qs = (
+                OrderItem.objects
+                .filter(seller_id=id, order__payment_status='paid')
+                .annotate(month=TruncMonth('order__created_at'))
+                .values('month')
+                .annotate(total=Sum(F('unit_price') * F('quantity')))
+                .order_by('month')
+            )
+        
+
 
         months = [p['month'].strftime('%Y-%m') for p in earnings_qs]
-        earnings = [float(p['total']) for p in earnings_qs]
+        earnings = [float(p['total'] or 0) for p in earnings_qs]
 
         # rating distribution (count per rating value 1..5)
         ratings = (Review.objects
@@ -59,6 +66,7 @@ class ProfileView(View):
                 .values('rating')
                 .annotate(cnt=Count('id'))
                 .order_by('rating'))
+        
         # build dict for 1..5
         rating_counts = {i: 0 for i in range(1, 6)}
         for r in ratings:
@@ -77,10 +85,7 @@ class ProfileView(View):
         user = User.objects.get(id=id)
         products = user.products.all()
         prodcount = user.products.all().count()
-        totalearn = Payment.objects.filter(user_id=id).aggregate(
-            total_earn=Sum("amount"),
-            total_count=Count("id")
-        )
+        totalearn = OrderItem.objects.filter(seller_id=id).aggregate(total_earn=Sum(F('unit_price') * F('quantity')),total_count=Count('id'))
         user_rating = Review.objects.filter(product__seller_id=id).aggregate(
             avg_rating=Avg('rating'),
         )
@@ -99,15 +104,23 @@ class ProfileView(View):
 
     
 
-class EditProfileView(View):
+class EditProfileView(LoginRequiredMixin, UserPassesTestMixin, View):
+    login_url = "login"
+    raise_exception=True
+
+    def test_func(self):
+        pk = self.kwargs.get('id')
+        return pk == self.request.user.id
 
     def get(self, request, id):
         user = User.objects.get(id=id)
+        
         forms = ProfileEditForm(instance=user)
         return render(request, "editprofile.html", {"form": forms})
     
     def post(self, request, id):
-        user = request.user
+        user = User.objects.get(id=id)
+        
         form = ProfileEditForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             user = form.save(commit=False)
@@ -118,20 +131,28 @@ class EditProfileView(View):
         return render(request, 'accounts/edit_profile.html', {'form': form})
     
 
-class EditAccountView(View):
+class EditAccountView(LoginRequiredMixin, UserPassesTestMixin, View):
+    login_url = "login"
+    raise_exception=True
+
+    def test_func(self):
+        pk = self.kwargs.get('id')
+        return pk == self.request.user.id
 
     def get(self, request, id):
         user = User.objects.get(id=id)
+        
         forms = AccountEditForm(instance=user)
         return render(request, "editaccount.html", {"form": forms})
 
     def post(self, request, id):
-        user = request.user
+        user = User.objects.get(id=request.user.id)
         form = AccountEditForm(request.POST, instance=user)
+        
         if form.is_valid():
             form.save()
             if form.cleaned_data.get("password"):
                 update_session_auth_hash(request, user)
             return redirect("profile", id=id)  # เปลี่ยนไปหน้าโปรไฟล์
         else:
-            raise ValidationError(form.errors)
+            return render(request, "editaccount.html", {"form": form})

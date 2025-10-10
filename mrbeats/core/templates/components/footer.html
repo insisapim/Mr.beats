@@ -23,16 +23,25 @@
 
         <div class="mt-8 flex items-center justify-center gap-4">
           <!-- Primary (Join as Seller) -->
+           {%if user.is_authenticated %}
+           <a
+            href="{%url 'uploads' %}"
+            class="inline-flex items-center gap-3 px-6 py-3 rounded-full text-white font-medium bg-gradient-to-tr from-purple-500 to-pink-400 shadow-[0_10px_30px_rgba(139,92,246,0.18)] hover:scale-[1.02] transition transform"
+          >
+            Upload You Work
+          </a>
+          {% else %}
           <a
-            href="#"
+            href="{%url 'login' %}"
             class="inline-flex items-center gap-3 px-6 py-3 rounded-full text-white font-medium bg-gradient-to-tr from-purple-500 to-pink-400 shadow-[0_10px_30px_rgba(139,92,246,0.18)] hover:scale-[1.02] transition transform"
           >
             Join as Seller
           </a>
+          {% endif %}
 
           <!-- Secondary (Start Buying) -->
           <a
-            href="#"
+            href="{%url 'product_list' %}"
             class="inline-flex items-center gap-3 px-6 py-3 rounded-full text-white font-medium border border-gray-800 bg-transparent hover:bg-white/5 transition"
           >
             Start Buying

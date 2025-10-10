@@ -98,374 +98,23 @@
 
       <!-- Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Card (repeatable) -->
-        <article
-          class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm"
-        >
-          <!-- artwork area -->
-          <div
-            class="relative aspect-[1/1] rounded-t-xl overflow-hidden bg-gradient-to-br from-purple-800 via-slate-800 to-emerald-800"
-          >
-            <!-- centered play button -->
-            <button
-              aria-label="Play beat"
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center ring-4 ring-black/40 shadow-lg hover:scale-105 transition"
-            >
-              <!-- play icon -->
-              <svg
-                class="w-6 h-6 text-white"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- meta -->
-          <div class="p-5 space-y-3">
-            <h3 class="text-white font-semibold">Midnight Vibes</h3>
-            <p class="text-sm text-gray-400">
-              by <span class="text-gray-200">BeatsbyAlex</span>
-            </p>
-
-            <div class="flex items-center justify-between mt-2">
-              <div class="flex items-center gap-2">
-                <!-- genre pill -->
-                <span
-                  class="text-xs bg-purple-900 text-purple-300 px-3 py-1 rounded-full"
-                  >Hip Hop</span
-                >
-                <!-- duration -->
-                <span class="text-xs text-gray-400">3:24</span>
-              </div>
-
-              <div class="text-sm text-gray-400 flex items-center gap-2">
-                <!-- rating -->
-                <span class="flex items-center gap-1">
-                  <svg
-                    class="w-4 h-4 text-yellow-400"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.789 1.402 8.168L12 18.896 4.664 23.167l1.402-8.168L.132 9.21l8.2-1.192z"
-                    />
-                  </svg>
-                  <span class="text-white font-semibold text-sm">4.8</span>
-                </span>
-                <span class="text-xs text-gray-500">127 sales</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between mt-4">
-              <!-- price -->
-              <div>
-                <div class="text-xl font-bold text-white">$29.99</div>
-              </div>
-
-              <!-- actions -->
-              <div class="flex items-center gap-3">
-                <!-- wishlist icon -->
-                <button
-                  aria-label="Wishlist"
-                  class="p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/5 transition"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-                    />
-                  </svg>
-                </button>
-
-                <button
-                  class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
-                >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 2 -->
-        <article
-          class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm"
-        >
-          <div
-            class="relative aspect-[1/1] rounded-t-xl overflow-hidden bg-gradient-to-br from-indigo-900 via-slate-800 to-teal-800"
-          >
-            <button
-              aria-label="Play beat"
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center ring-4 ring-black/40 shadow-lg hover:scale-105 transition"
-            >
-              <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
-                <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
-              </svg>
-            </button>
-          </div>
-          <div class="p-5 space-y-3">
-            <h3 class="text-white font-semibold">Neon Dreams</h3>
-            <p class="text-sm text-gray-400">
-              by <span class="text-gray-200">SynthWave</span>
-            </p>
-
-            <div class="flex items-center justify-between mt-2">
-              <div class="flex items-center gap-2">
-                <span
-                  class="text-xs bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full"
-                  >Electronic</span
-                >
-                <span class="text-xs text-gray-400">4:12</span>
-              </div>
-              <div class="text-sm text-gray-400 flex items-center gap-2">
-                <span class="flex items-center gap-1">
-                  <svg
-                    class="w-4 h-4 text-yellow-400"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.789 1.402 8.168L12 18.896 4.664 23.167l1.402-8.168L.132 9.21l8.2-1.192z"
-                    />
-                  </svg>
-                  <span class="text-white font-semibold text-sm">4.9</span>
-                </span>
-                <span class="text-xs text-gray-500">89 sales</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between mt-4">
-              <div><div class="text-xl font-bold text-white">$39.99</div></div>
-              <div class="flex items-center gap-3">
-                <button
-                  aria-label="Wishlist"
-                  class="p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/5 transition"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  >
-                    <path
-                      d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
-                >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 3 -->
-        <article
-          class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm"
-        >
-          <div
-            class="relative aspect-[1/1] rounded-t-xl overflow-hidden bg-gradient-to-br from-rose-900 via-slate-800 to-cyan-800"
-          >
-            <button
-              aria-label="Play beat"
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center ring-4 ring-black/40 shadow-lg hover:scale-105 transition"
-            >
-              <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
-                <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
-              </svg>
-            </button>
-          </div>
-          <div class="p-5 space-y-3">
-            <h3 class="text-white font-semibold">Urban Flow</h3>
-            <p class="text-sm text-gray-400">
-              by <span class="text-gray-200">CityBeats</span>
-            </p>
-
-            <div class="flex items-center justify-between mt-2">
-              <div class="flex items-center gap-2">
-                <span
-                  class="text-xs bg-rose-900 text-rose-300 px-3 py-1 rounded-full"
-                  >Trap</span
-                >
-                <span class="text-xs text-gray-400">2:58</span>
-              </div>
-              <div class="text-sm text-gray-400 flex items-center gap-2">
-                <span class="flex items-center gap-1">
-                  <svg
-                    class="w-4 h-4 text-yellow-400"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.789 1.402 8.168L12 18.896 4.664 23.167l1.402-8.168L.132 9.21l8.2-1.192z"
-                    />
-                  </svg>
-                  <span class="text-white font-semibold text-sm">4.7</span>
-                </span>
-                <span class="text-xs text-gray-500">203 sales</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between mt-4">
-              <div><div class="text-xl font-bold text-white">$24.99</div></div>
-              <div class="flex items-center gap-3">
-                <button
-                  aria-label="Wishlist"
-                  class="p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/5 transition"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  >
-                    <path
-                      d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
-                >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 4 -->
-        <article
-          class="bg-[#0b0b0b] border border-gray-800 rounded-2xl overflow-hidden shadow-sm"
-        >
-          <div
-            class="relative aspect-[1/1] rounded-t-xl overflow-hidden bg-gradient-to-br from-purple-700 via-slate-800 to-sky-800"
-          >
-            <button
-              aria-label="Play beat"
-              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-pink-400 flex items-center justify-center ring-4 ring-black/40 shadow-lg hover:scale-105 transition"
-            >
-              <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
-                <path d="M8 5v14l11-7L8 5z" fill="currentColor" />
-              </svg>
-            </button>
-          </div>
-          <div class="p-5 space-y-3">
-            <h3 class="text-white font-semibold">Sunset Groove</h3>
-            <p class="text-sm text-gray-400">
-              by <span class="text-gray-200">WaveRider</span>
-            </p>
-
-            <div class="flex items-center justify-between mt-2">
-              <div class="flex items-center gap-2">
-                <span
-                  class="text-xs bg-purple-900 text-purple-300 px-3 py-1 rounded-full"
-                  >R&amp;B</span
-                >
-                <span class="text-xs text-gray-400">3:45</span>
-              </div>
-              <div class="text-sm text-gray-400 flex items-center gap-2">
-                <span class="flex items-center gap-1">
-                  <svg
-                    class="w-4 h-4 text-yellow-400"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.789 1.402 8.168L12 18.896 4.664 23.167l1.402-8.168L.132 9.21l8.2-1.192z"
-                    />
-                  </svg>
-                  <span class="text-white font-semibold text-sm">4.6</span>
-                </span>
-                <span class="text-xs text-gray-500">156 sales</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between mt-4">
-              <div><div class="text-xl font-bold text-white">$34.99</div></div>
-              <div class="flex items-center gap-3">
-                <button
-                  aria-label="Wishlist"
-                  class="p-2 rounded-md text-gray-300 hover:text-white hover:bg-white/5 transition"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                  >
-                    <path
-                      d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 10-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"
-                    />
-                  </svg>
-                </button>
-                <button
-                  class="inline-flex items-center gap-2 bg-gradient-to-tr from-purple-500 to-pink-400 text-white px-4 py-2 text-sm rounded-lg shadow hover:scale-[1.02] transition"
-                >
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        </article>
+        {%include 'components/lyrics_modal.html' %}
+      <!-- ช่องว่างสำหรับใส่ card ในอนาคต -->
+          {% for prod in products %} 
+          {% if prod.lyrics_text == "" %}
+          {% include "components/card.html" with product=prod %}
+          {%else%}
+          {% include "components/lyricscard.html" with product=prod%}
+          {% endif %}
+          {% empty %}
+          <p class="text-gray-400">ยังไม่มีสินค้า</p>
+          {% endfor %}
       </div>
 
       <!-- CTA -->
       <div class="mt-12 text-center">
         <a
-          href="#"
+          href="{%url 'product_list' %}"
           class="inline-block px-6 py-3 border border-gray-700 rounded-full text-white text-sm hover:bg-white/5 transition"
         >
           View All Beats
@@ -474,5 +123,112 @@
     </section>
     {% include 'components/footer.html' %}
   </body>
+  <script>
+  
+  (function () {
+    let currentAudio = null;
+    let currentBtn = null;
+
+    document.querySelectorAll(".play-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.productId;
+        const audio = document.getElementById("audio-" + id);
+        const progressEl = document.getElementById("progress-" + id);
+        if (!audio || !progressEl) return;
+
+        // หยุด audio ตัวก่อน
+        if (currentAudio && currentAudio !== audio) {
+          currentAudio.pause();
+          document.getElementById(
+            "progress-" + currentBtn.dataset.productId
+          ).style.width = "0%";
+          currentBtn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+        }
+
+        if (audio.paused) {
+          await audio.play().catch((err) => console.error(err));
+          currentAudio = audio;
+          currentBtn = btn;
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>';
+        } else {
+          audio.pause();
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+          currentAudio = null;
+          currentBtn = null;
+          progressEl.style.width = "0%";
+        }
+
+        // อัปเดต progress
+        audio.addEventListener("timeupdate", () => {
+          if (!audio.duration) return;
+          progressEl.style.width =
+            (audio.currentTime / audio.duration) * 100 + "%";
+        });
+
+        audio.addEventListener("ended", () => {
+          progressEl.style.width = "0%";
+          btn.querySelector(".play-icon").innerHTML =
+            '<path d="M8 5v14l11-7L8 5z" fill="currentColor"/>';
+          currentAudio = null;
+          currentBtn = null;
+        });
+      });
+    });
+  })();
+  
+(function () {
+  const modal = document.getElementById('lyrics-modal');
+  const panel = document.getElementById('lyrics-modal-panel');
+  const backdrop = document.getElementById('lyrics-modal-backdrop');
+  const closeBtn = document.getElementById('lyrics-modal-close');
+  const contentEl = document.getElementById('lyrics-modal-content');
+
+  function openModal(text) {
+    contentEl.textContent = text || 'No lyrics available.';
+    modal.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      panel.classList.remove('scale-95', 'opacity-0');
+      panel.classList.add('scale-100', 'opacity-100');
+      document.documentElement.classList.add('overflow-hidden');
+    });
+  }
+
+  function closeModal() {
+    panel.classList.remove('scale-100', 'opacity-100');
+    panel.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      contentEl.textContent = '';
+      document.documentElement.classList.remove('overflow-hidden');
+    }, 180);
+  }
+
+  // delegated: เปิด modal เมื่อกดปุ่ม .lyrics-btn
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.lyrics-btn');
+    if (!btn) return;
+    e.preventDefault();
+    const id = btn.dataset.productId;
+    const src = document.getElementById('lyrics-' + id);
+    if (!src) {
+      openModal('No lyrics available.');
+      return;
+    }
+    const text = src.innerText?.trim() || '';
+    openModal(text);
+  });
+
+  // ปิด modal
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+})();
+
+</script>
   {% endblock %}
 </html>

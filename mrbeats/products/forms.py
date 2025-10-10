@@ -137,11 +137,10 @@ class ProductForm(forms.ModelForm):
     
 class LyricsForm(forms.ModelForm):
     file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
-    preview_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
 
     class Meta:
         model = Product
-        exclude = ("seller", "downloads", "bpm", "music_key", "license_type")
+        exclude = ("seller", "downloads", "bpm", "music_key", "license_type", "preview_file")
 
         widgets = {
             # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
@@ -195,16 +194,7 @@ class LyricsForm(forms.ModelForm):
             if f.size > max_mb * 1024 * 1024:
                 raise ValidationError(f"ไฟล์หลักต้องไม่เกิน {max_mb} MB")
             return f
-        
-        def clean_preview_file(self):
-            pf = self.cleaned_data.get("preview_file")
-            if not pf:
-                return pf
-            # ตัวอย่างจำกัดขนาดพรีวิว
-            max_mb = 50
-            if pf.size > max_mb * 1024 * 1024:
-                raise ValidationError(f"ไฟล์พรีวิวต้องไม่เกิน {max_mb} MB")
-            return pf
+
 
 class EditProductForm(forms.ModelForm):
     file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
@@ -325,11 +315,10 @@ class EditProductForm(forms.ModelForm):
 
 class EditLyricsForm(forms.ModelForm):
     file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
-    preview_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
 
     class Meta:
         model = Product
-        exclude = ("seller", "downloads", "bpm", "music_key", "license_type")
+        exclude = ("seller", "downloads", "bpm", "music_key", "license_type", "preview_file")
 
         widgets = {
             # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
@@ -385,13 +374,3 @@ class EditLyricsForm(forms.ModelForm):
                 raise ValidationError(f"ไฟล์หลักต้องไม่เกิน {max_mb} MB")
             return f
         
-        def clean_preview_file(self):
-            pf = self.cleaned_data.get("preview_file")
-
-            if not pf and self.instance and getattr(self.instance, 'preview_file', None):
-                return self.instance.file
-            
-            max_mb = 50
-            if pf.size > max_mb * 1024 * 1024:
-                raise ValidationError(f"ไฟล์พรีวิวต้องไม่เกิน {max_mb} MB")
-            return pf

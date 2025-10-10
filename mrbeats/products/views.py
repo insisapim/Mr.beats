@@ -1,23 +1,26 @@
 from django.http import FileResponse, Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
 from .models import CartItem, Product, Cart
 from django.views import View
 from decimal import Decimal
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from .forms import *
 from django.db.models import Q
-from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseForbidden
 from orders.models import Order, OrderItem
 
 class HomepageView(View):
     def get(self, request):
-        query = request.GET.get('q')
-
-        if query:
-            products = Product.objects.filter(name__icontains=query)
-        else:
-            products = Product.objects.all()
+        products = Product.objects.all().order_by("-downloads")[:4]
+        MAX_CHARS = 600  # limit ขนาดที่จะส่งไปยัง template
+        for p in products:
+            preview_text = ""
+            if getattr(p, "lyrics_text", None):
+                preview_text = p.lyrics_text.strip()
+                if len(preview_text) > MAX_CHARS:
+                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
+            p.preview_text = preview_text
 
         return render(request, 'home.html', {'products': products})
 
@@ -30,6 +33,9 @@ class ProductListView(View):
         price = request.GET.get("price", "")
         search = request.GET.get("search", "")
         sort = request.GET.get("sort", "")
+        sortby = request.GET.get("sort-by", "")
+
+        final_sort = sortby+sort
         print("type:", current_type, "\n", "genre:", genre, "\n", "price:", price, "\n", "search:", search, "\n", "sort:", sort)
 
         if (current_type == "" or current_type == 'all'):
@@ -47,7 +53,7 @@ class ProductListView(View):
             if (search != ""):
                 products = products.filter(Q(title__icontains=search) | Q(lyrics_text__icontains=search))
             if (sort != ""):
-                products = products.order_by(sort)
+                products = products.order_by(final_sort)
         elif (current_type == 'beats'):
             products = Product.objects.select_related('seller').filter(Q(lyrics_text__isnull=True) | Q(lyrics_text=""))
             if (genre and genre != "all"):
@@ -62,7 +68,7 @@ class ProductListView(View):
             if (search != ""):
                 products = products.filter(title__icontains=search)
             if (sort != ""):
-                products = products.order_by(sort)
+                products = products.order_by(final_sort)
         elif (current_type == "lyrics"):
             products = Product.objects.select_related('seller').exclude(Q(lyrics_text__isnull=True) | Q(lyrics_text=""))
             if (genre and genre != "all"):
@@ -78,7 +84,7 @@ class ProductListView(View):
             if (search != ""):
                 products = products.filter(Q(title__icontains=search) | Q(lyrics_text__icontains=search))
             if (sort != ""):
-                products = products.order_by(sort)
+                products = products.order_by(final_sort)
                 
         MAX_CHARS = 600  # limit ขนาดที่จะส่งไปยัง template
         for p in products:
@@ -93,7 +99,7 @@ class ProductListView(View):
         return render(request, 'product_list.html', {"product": products, "genres" : genres})
     
 class UploadView(LoginRequiredMixin, View):
-
+    login_url = 'login'
     def get(self, request):
         form = ProductForm()
         return render(request, 'upload.html', {"productForm": form,})
@@ -215,50 +221,65 @@ class CartDeleteView(View):
 #     def get(self, request):
 #         request.session.flush()
 #         return redirect('cart')
-class EditProductView(View):
+class EditProductView(LoginRequiredMixin, UserPassesTestMixin, View):
+    login_url = 'login'
+    raise_exception = True
 
+    def get_object(self):
+        # ดึง id จาก kwargs (คุณส่ง id ผ่าน URL เช่น path('editproduct/<int:id>/', ...))
+        return get_object_or_404(Product, pk=self.kwargs.get('id'))
+
+    def test_func(self):
+        prod = self.get_object()
+        return prod.seller_id == self.request.user.id
+    
     def get(self, request, id):
-        if request.user.is_authenticated:
+        product = self.get_object()
 
-            product = Product.objects.get(id=id)
-            
-            if (product.lyrics_text == ""):
-                productForm = ProductForm(instance=product)
-            else:
-                productForm = LyricsForm(instance=product)
+        if (product.lyrics_text == ""):
+            productForm = ProductForm(instance=product)
+        else:
+            productForm = LyricsForm(instance=product)
 
         return render(request, 'editproduct.html', {"productForm": productForm, "product": product})
     
     def post(self, request, id):
-        if request.user.is_authenticated:
-            license_type = request.POST.get('license_type')
-            prod = Product.objects.get(id=id)
-            if prod.lyrics_text == "" :
-                form = EditProductForm(request.POST or None, request.FILES or None, instance=prod)
-            else:
-                form = EditLyricsForm(request.POST or None, request.FILES or None, instance=prod)
-            if form.is_valid():
-                product = form.save(commit=False)
-                product.seller = request.user
-                if prod.lyrics_text == "":
-                    product.license_type = "exclusive"
-                if license_type == "royalty_free":
-                    product.price = 0
-                product.save()
-                form.save_m2m()
-                return redirect('home')
-            else:
-                raise ValidationError(form.errors);
+        license_type = request.POST.get('license_type')
+        prod = self.get_object()
+        
+        if prod.lyrics_text == "" :
+            form = EditProductForm(request.POST or None, request.FILES or None, instance=prod)
+        else:
+            form = EditLyricsForm(request.POST or None, request.FILES or None, instance=prod)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.seller = request.user
+            if prod.lyrics_text == "":
+                product.license_type = "exclusive"
+            if license_type == "royalty_free":
+                product.price = 0
+            product.save()
+            form.save_m2m()
+            return redirect('product_list')
+        else:
+            raise ValidationError(form.errors);
 
-class DeleteProductView(View):
+class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, View):
+    login_url = 'login'
+    raise_exception = True
+
+    def get_object(self):
+        # ดึง id จาก kwargs (คุณส่ง id ผ่าน URL เช่น path('editproduct/<int:id>/', ...))
+        return get_object_or_404(Product, pk=self.kwargs.get('id'))
+
+    def test_func(self):
+        prod = self.get_object()
+        print(prod)
+        return prod.seller.id == self.request.user.id
 
     def post(self, request, id):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        prod = Product.objects.get(id=id)
-
-        if prod.seller_id != request.user.id:
-            raise PermissionDenied("You cannot delete this product")
+        prod = self.get_object()
+        
 
         # ลบไฟล์ที่เกี่ยวข้อง (ถ้ามี)
         try:
