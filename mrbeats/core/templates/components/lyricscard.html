@@ -44,9 +44,9 @@
       <h3 class="text-white font-semibold">{{ product.title }}</h3>
       <p class="text-sm text-gray-400">
         by
-        <span class="text-gray-200"
+        <a href="{%url 'profile' id=product.seller.id %}" class="text-gray-200"
           >{% if product.seller.artist_name %} {{ product.seller.artist_name }}
-          {% else %} {{ product.seller.username }} {% endif %}</span
+          {% else %} {{ product.seller.username }} {% endif %}</a
         >
       </p>
 

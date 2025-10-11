@@ -36,8 +36,7 @@ class ProductListView(View):
         sortby = request.GET.get("sort-by", "")
 
         final_sort = sortby+sort
-        print("type:", current_type, "\n", "genre:", genre, "\n", "price:", price, "\n", "search:", search, "\n", "sort:", sort)
-
+        
         if (current_type == "" or current_type == 'all'):
             products = Product.objects.select_related('seller').all()
             if (genre and genre != "all"):
