@@ -41,10 +41,16 @@
                     <button type="submit"
                         class="w-full py-3 px-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg">Save
                         Changed</button>
-                    <a href="{% url 'contract' %}"
+                    <a href="{% url 'mycontract' %}"
                         class="w-full text-center py-3 px-4 bg-gradient-primary hover:opacity-100 text-white font-semibold rounded-lg hover:bg-purple-700 transition duration-300 shadow-lg">Back</a>
                 </div>
             </form>
+            <form action="{% url 'deletecontract' contract_id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit"
+             class="w-full py-3 px-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-900 transition duration-300 shadow-lg mt-6">Delete</button>
+            </form>
+            
         </div>
     </div>
 </body>

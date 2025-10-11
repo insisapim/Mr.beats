@@ -7,7 +7,8 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
- 
+from django.db import transaction
+
 class ContractView(LoginRequiredMixin, View):
     def get(self, request):
         seven_day = timezone.now() - timedelta(days=7)
@@ -73,7 +74,6 @@ class ActionView(LoginRequiredMixin, View):
 class ContractEditView(LoginRequiredMixin, View):
     def get(self, request, contract_id):
         get_contract = ContractWork.objects.filter(id=contract_id).first()
-
         form = ContractWorkForm(initial={
             "title" : get_contract.title,
             "details" : get_contract.details,
@@ -88,4 +88,17 @@ class ContractEditView(LoginRequiredMixin, View):
             form.save()
             return redirect('mycontract')
         return render(request, 'editcontract.html', {'form':form, 'contract_id':contract_id})
-        
+    
+class ContractDeleteView(LoginRequiredMixin, View):
+       
+    def post(self, request, contract_id):
+        get_contract = ContractWork.objects.filter(id=contract_id, contractor=None).first()
+        if not get_contract or get_contract.client.id != request.user.id:
+            return redirect('mycontract')
+        try:
+            with transaction.atomic():
+                get_contract.delete()
+                return redirect('mycontract')
+        except AttributeError:
+            raise ("AttributeError error")
+        return redirect('mycontract')

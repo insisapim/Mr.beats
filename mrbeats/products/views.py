@@ -278,7 +278,7 @@ class ReviewView(LoginRequiredMixin, View):
         product_id = request.POST.get("product_id")
         user = request.user
         get_product = Product.objects.filter(id=product_id).first()
-        get_review = Review.objects.filter(product=get_product).first()
+        get_review = Review.objects.filter(product=get_product, reviewer=user).first()
         
         if get_review is None:
             Review.objects.create(product=get_product, reviewer=user, rating=score, comment=comment)
@@ -287,3 +287,12 @@ class ReviewView(LoginRequiredMixin, View):
             get_review.comment = comment
             get_review.save()
         return redirect('dowload')
+    
+
+class ProductDetailView(View):
+
+    def get(self, request, product_id):
+        get_product = Product.objects.filter(id=product_id).first()
+        review = Review.objects.filter(product=get_product)
+        review_count = review.count()
+        return render(request, 'product_details.html', {'get_product':get_product, 'review':review, 'review_count':review_count})
