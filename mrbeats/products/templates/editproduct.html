@@ -31,6 +31,17 @@ UploadBeats{%endblock %} {% block content %} {%if product.lyrics_text == "" %}
                 class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
               >
                 {{productForm.file}}
+                {% if productForm.instance.file %}
+                <audio id="audiofilePreview" controls class="mt-4 w-full">
+                <source id="audiofileSource" src="{{productForm.instance.file.url}}" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+              {%else%}
+              <audio id="audiofilePreview" controls class="hidden mt-4 w-full">
+                <source id="audiofileSource" src="" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+              {% endif %}
 
                 <label
                   for="{{productForm.file.id_for_label}}"
@@ -73,6 +84,17 @@ UploadBeats{%endblock %} {% block content %} {%if product.lyrics_text == "" %}
                 class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
               >
                 {{productForm.preview_file}}
+                {%if productForm.instance.preview_file %}
+                <audio id="audioPreview" controls class="mt-4 w-full">
+                <source id="audioSource" src="{{productForm.instance.preview_file.url}}" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+              {% else %}
+              <audio id="audioPreview" controls class="hidden mt-4 w-full">
+                <source id="audioSource" src="" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+              {% endif %}
 
                 <label
                   for="{{productForm.file.id_for_label}}"
@@ -355,6 +377,66 @@ UploadBeats{%endblock %} {% block content %} {%if product.lyrics_text == "" %}
         });
       }
     });
+
+    document.querySelectorAll('input[type="file"]').forEach((input) => {
+    // หา preview image ของ input ใกล้ที่สุด
+    const preview = input.closest("div").querySelector("img");
+
+    input.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          preview.src = ev.target.result;
+          preview.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.classList.add("hidden");
+        preview.src = "";
+      }
+    });
+  });
+
+  const audioInput = document.getElementById("{{ productForm.preview_file.id_for_label }}");
+  const audioPreview = document.getElementById("audioPreview");
+  const audioSource = document.getElementById("audioSource");
+
+  audioInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("audio/")) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        audioSource.src = ev.target.result;
+        audioPreview.load();
+        audioPreview.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      audioPreview.classList.add("hidden");
+      audioSource.src = "";
+    }
+  });
+
+  const audioFileInput = document.getElementById("{{ productForm.file.id_for_label }}");
+  const audioFilePreview = document.getElementById("audiofilePreview");
+  const audioFileSource = document.getElementById("audiofileSource");
+
+  audioFileInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("audio/")) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        audioFileSource.src = ev.target.result;
+        audioFilePreview.load();
+        audioFilePreview.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      audioFilePreview.classList.add("hidden");
+      audioFileSource.src = "";
+    }
+  });
   </script>
 </body>
 {% else %}

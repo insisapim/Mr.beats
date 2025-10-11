@@ -10,11 +10,9 @@
     >
       {% csrf_token %}
 
-
-      <input type="hidden" name="upload_type" value="beat">
+      <input type="hidden" name="upload_type" value="beat" />
       <!-- File Upload & Cover Art -->
       <section class="grid grid-cols-2 gap-6">
-        
         <div class="">
           <!-- Beat File -->
 
@@ -24,6 +22,10 @@
               class="relative border-2 border-dashed border-gray-600 rounded-lg p-8 text-center cursor-pointer hover:border-purple-500 flex flex-col items-center justify-center"
             >
               {{productForm.file}}
+              <audio id="audiofilePreview" controls class="hidden mt-4 w-full">
+                <source id="audiofileSource" src="" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
 
               <label
                 for="{{productForm.file.id_for_label}}"
@@ -67,11 +69,15 @@
             >
               {{productForm.preview_file}}
 
+              <audio id="audioPreview" controls class="hidden mt-4 w-full">
+                <source id="audioSource" src="" type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+
               <label
                 for="{{productForm.file.id_for_label}}"
                 class="cursor-pointer flex flex-col items-center"
               >
-                
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-12 h-12 text-white mb-4"
@@ -166,7 +172,9 @@
             {{productForm.theme.errors}}
             <label class="block mb-2 font-semibold">Theme</label>
             {{productForm.theme}}
-            <p class="text-sm text-gray-400 mt-1">เลือกได้หลายอย่าง เช่น Sad, Chill, Party</p>
+            <p class="text-sm text-gray-400 mt-1">
+              เลือกได้หลายอย่าง เช่น Sad, Chill, Party
+            </p>
           </div>
 
           <div class="mt-6">
@@ -239,7 +247,7 @@
 
         <!-- show any license errors -->
         <div class="text-red-500 text-sm mt-2">
-          {{ productForm.license_type.errors }} 
+          {{ productForm.license_type.errors }}
         </div>
       </div>
 
@@ -257,7 +265,7 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const cards = document.querySelectorAll(".lic-card");
-      const hiddenLicense = document.querySelector('[name="license_type"]')
+      const hiddenLicense = document.querySelector('[name="license_type"]');
       const priceWrap = document.getElementById("price_wrap");
       const priceInput = document.querySelector('[name="price"]');
       const priceLabel = document.getElementById("price_label");
@@ -322,23 +330,63 @@
       }
     });
 
-  const coverInput = document.getElementById(
-    "{{productForm.product_image.id_for_label}}"
-  );
-  const coverPreview = document.getElementById("product_imagePreview");
+    const coverInput = document.getElementById(
+      "{{productForm.product_image.id_for_label}}"
+    );
+    const coverPreview = document.getElementById("product_imagePreview");
 
-  coverInput?.addEventListener("change", (e) => {
+    coverInput?.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (file && file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          coverPreview.src = ev.target.result;
+          coverPreview.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        coverPreview.classList.add("hidden");
+        coverPreview.src = "";
+      }
+    });
+
+  const audioInput = document.getElementById("{{ productForm.preview_file.id_for_label }}");
+  const audioPreview = document.getElementById("audioPreview");
+  const audioSource = document.getElementById("audioSource");
+
+  audioInput?.addEventListener("change", (e) => {
     const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file && file.type.startsWith("audio/")) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        coverPreview.src = ev.target.result;
-        coverPreview.classList.remove("hidden");
+        audioSource.src = ev.target.result;
+        audioPreview.load();
+        audioPreview.classList.remove("hidden");
       };
       reader.readAsDataURL(file);
     } else {
-      coverPreview.classList.add("hidden");
-      coverPreview.src = "";
+      audioPreview.classList.add("hidden");
+      audioSource.src = "";
+    }
+  });
+
+  const audioFileInput = document.getElementById("{{ productForm.file.id_for_label }}");
+  const audioFilePreview = document.getElementById("audiofilePreview");
+  const audioFileSource = document.getElementById("audiofileSource");
+
+  audioFileInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("audio/")) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        audioFileSource.src = ev.target.result;
+        audioFilePreview.load();
+        audioFilePreview.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      audioFilePreview.classList.add("hidden");
+      audioFileSource.src = "";
     }
   });
   </script>
