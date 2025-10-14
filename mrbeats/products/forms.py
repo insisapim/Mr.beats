@@ -65,7 +65,7 @@ class ProductForm(forms.ModelForm):
                 "class": "w-full p-3 rounded bg-gray-700 text-gray-100",
                 "size": "5",
             }),
-            "product_image": forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}),
+            "product_image": forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}),
             "lyrics_text": forms.Textarea(attrs={
                 "class": "form-textarea w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
                 "row": 15,
@@ -159,7 +159,7 @@ class LyricsForm(forms.ModelForm):
                 "class": "w-full p-3 rounded bg-gray-700 text-gray-100",
                 "size": "5",
             }),
-            "product_image": forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}),
+            "product_image": forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}),
             "lyrics_text": forms.Textarea(attrs={
                 "class": "form-textarea w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
                 "row": 16,
@@ -233,7 +233,7 @@ class EditProductForm(forms.ModelForm):
                 "class": "w-full p-3 rounded bg-gray-700 text-gray-100",
                 "size": "5",
             }),
-            "product_image": forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}),
+            "product_image": forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}),
             "lyrics_text": forms.Textarea(attrs={
                 "class": "form-textarea w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
                 "row": 15,

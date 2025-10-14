@@ -10,6 +10,8 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden
 from orders.models import Order, OrderItem
 from reviews.models import Review
+from django.db.models import Avg, Count
+
 class HomepageView(View):
     def get(self, request):
         products = Product.objects.all().order_by("-downloads")[:4]
@@ -38,7 +40,7 @@ class ProductListView(View):
         final_sort = sortby+sort
         
         if (current_type == "" or current_type == 'all'):
-            products = Product.objects.select_related('seller').all()
+            products = Product.objects.select_related('seller').annotate(avg_rating=Avg('reviews__rating')).all()
             if (genre and genre != "all"):
                 products = products.filter(genre__name=genre)
             if (price != "all" and price != ""):
@@ -54,7 +56,7 @@ class ProductListView(View):
             if (sort != ""):
                 products = products.order_by(final_sort)
         elif (current_type == 'beats'):
-            products = Product.objects.select_related('seller').filter(Q(lyrics_text__isnull=True) | Q(lyrics_text=""))
+            products = Product.objects.select_related('seller').filter(Q(lyrics_text__isnull=True) | Q(lyrics_text="")).annotate(avg_rating=Avg('reviews__rating'))
             if (genre and genre != "all"):
                 products = products.filter(genre__name=genre)
             if (price != "all" and price != ""):
@@ -69,7 +71,7 @@ class ProductListView(View):
             if (sort != ""):
                 products = products.order_by(final_sort)
         elif (current_type == "lyrics"):
-            products = Product.objects.select_related('seller').exclude(Q(lyrics_text__isnull=True) | Q(lyrics_text=""))
+            products = Product.objects.select_related('seller').exclude(Q(lyrics_text__isnull=True) | Q(lyrics_text="")).annotate(avg_rating=Avg('reviews__rating'))
             if (genre and genre != "all"):
                 products = products.filter(genre__name=genre)
             if (price != "all" and price != ""):
