@@ -19,7 +19,7 @@ class HomepageView(View):
             if getattr(p, "lyrics_text", None):
                 preview_text = p.lyrics_text.strip()
                 if len(preview_text) > MAX_CHARS:
-                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
+                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n..."
             p.preview_text = preview_text
 
         return render(request, 'home.html', {'products': products})
@@ -91,7 +91,7 @@ class ProductListView(View):
             if getattr(p, "lyrics_text", None):
                 preview_text = p.lyrics_text.strip()
                 if len(preview_text) > MAX_CHARS:
-                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
+                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n..."
             p.preview_text = preview_text
 
         genres = Genre.objects.all()
@@ -178,7 +178,6 @@ class EditProductView(LoginRequiredMixin, UserPassesTestMixin, View):
     raise_exception = True
 
     def get_object(self):
-        # ดึง id จาก kwargs (คุณส่ง id ผ่าน URL เช่น path('editproduct/<int:id>/', ...))
         return get_object_or_404(Product, pk=self.kwargs.get('id'))
 
     def test_func(self):
@@ -221,7 +220,6 @@ class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, View):
     raise_exception = True
 
     def get_object(self):
-        # ดึง id จาก kwargs (คุณส่ง id ผ่าน URL เช่น path('editproduct/<int:id>/', ...))
         return get_object_or_404(Product, pk=self.kwargs.get('id'))
 
     def test_func(self):
@@ -231,9 +229,8 @@ class DeleteProductView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def post(self, request, id):
         prod = self.get_object()
-        
 
-        # ลบไฟล์ที่เกี่ยวข้อง (ถ้ามี)
+        # ลบไฟล์ที่เกี่ยวข้อง
         try:
             if prod.file:
                 prod.file.delete(save=False)

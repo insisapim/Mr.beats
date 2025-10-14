@@ -37,7 +37,6 @@ class ProductForm(forms.ModelForm):
         exclude = ("seller", "downloads")
         
         widgets = {
-            # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
             "seller": forms.HiddenInput(),
             "title": forms.TextInput(attrs={
                 "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
@@ -58,7 +57,6 @@ class ProductForm(forms.ModelForm):
                 "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
                 "placeholder": "เช่น C#m, F, Am"
             }),
-            # ManyToMany
             "genre": forms.Select(
                 attrs={
                     "class": "w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
@@ -76,7 +74,6 @@ class ProductForm(forms.ModelForm):
             "license_type": forms.Select(attrs={"class": "hidden"})
         }
 
-    # Validation ขั้นพื้นฐาน
     def clean_price(self):
         price = self.cleaned_data.get("price")
         if price is not None and price < 0:
@@ -93,8 +90,6 @@ class ProductForm(forms.ModelForm):
 
     def clean_file(self):
         f = self.cleaned_data.get("file")
-        if not f and self.instance and getattr(self.instance, 'file', None):
-            return self.instance.file
         
         if not f:
             raise ValidationError("กรุณาเลือกไฟล์")
@@ -108,7 +103,6 @@ class ProductForm(forms.ModelForm):
         pf = self.cleaned_data.get("preview_file")
         if not pf:
             return pf
-        # ตัวอย่างจำกัดขนาดพรีวิว
         max_mb = 50
         if pf.size > max_mb * 1024 * 1024:
             raise ValidationError(f"ไฟล์พรีวิวต้องไม่เกิน {max_mb} MB")
@@ -120,14 +114,11 @@ class ProductForm(forms.ModelForm):
         price = cleaned.get('price')
 
         if license_type == 'royalty_free':
-            # royalty-free ไม่ต้องมีราคาให้เป็น None
             cleaned['price'] = 0
         elif license_type in ('non_exclusive', 'exclusive'):
             if price in (None, ''):
-                # ถ้าต้องการแยกข้อความสำหรับ exclusive vs non-excl ให้เปลี่ยนข้อความได้
                 field_name = 'price'
                 raise ValidationError({field_name: 'กรุณากรอกราคาเมื่อเลือก Non-exclusive หรือ Exclusive'})
-            # คุณอาจเพิ่ม validation เพิ่ม เช่น price >= 1 หรือ min amount for exclusive
             if price is not None and price < 0:
                 raise ValidationError({'price': 'ราคาต้องมากกว่าหรือเท่ากับ 0'})
         else:
@@ -143,7 +134,6 @@ class LyricsForm(forms.ModelForm):
         exclude = ("seller", "downloads", "bpm", "music_key", "license_type", "preview_file")
 
         widgets = {
-            # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
             "seller": forms.HiddenInput(),
             "title": forms.TextInput(attrs={
                 "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
@@ -161,7 +151,6 @@ class LyricsForm(forms.ModelForm):
                 "placeholder": "เช่น 19.99"
             }),
 
-            # ManyToMany
             "genre": forms.Select(
                 attrs={
                     "class": "w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
@@ -189,7 +178,6 @@ class LyricsForm(forms.ModelForm):
             f = self.cleaned_data.get("file")
             if not f:
                 raise ValidationError("กรุณาเลือกไฟล์")
-            # ตัวอย่างจำกัดขนาดไฟล์หลัก (ปรับตามต้องการ)
             max_mb = 50
             if f.size > max_mb * 1024 * 1024:
                 raise ValidationError(f"ไฟล์หลักต้องไม่เกิน {max_mb} MB")
@@ -217,7 +205,6 @@ class EditProductForm(forms.ModelForm):
         exclude = ("seller", "downloads")
         
         widgets = {
-            # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
             "seller": forms.HiddenInput(),
             "title": forms.TextInput(attrs={
                 "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
@@ -238,7 +225,6 @@ class EditProductForm(forms.ModelForm):
                 "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
                 "placeholder": "เช่น C#m, F, Am"
             }),
-            # ManyToMany
             "genre": forms.Select(
                 attrs={
                     "class": "w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
@@ -256,7 +242,6 @@ class EditProductForm(forms.ModelForm):
             "license_type": forms.Select(attrs={"class": "hidden"})
         }
 
-    # Validation ขั้นพื้นฐาน
     def clean_price(self):
         price = self.cleaned_data.get("price")
         if price is not None and price < 0:
@@ -298,14 +283,11 @@ class EditProductForm(forms.ModelForm):
         price = cleaned.get('price')
 
         if license_type == 'royalty_free':
-            # royalty-free ไม่ต้องมีราคาให้เป็น None
             cleaned['price'] = 0
         elif license_type in ('non_exclusive', 'exclusive'):
             if price in (None, ''):
-                # ถ้าต้องการแยกข้อความสำหรับ exclusive vs non-excl ให้เปลี่ยนข้อความได้
                 field_name = 'price'
                 raise ValidationError({field_name: 'กรุณากรอกราคาเมื่อเลือก Non-exclusive หรือ Exclusive'})
-            # คุณอาจเพิ่ม validation เพิ่ม เช่น price >= 1 หรือ min amount for exclusive
             if price is not None and price < 0:
                 raise ValidationError({'price': 'ราคาต้องมากกว่าหรือเท่ากับ 0'})
         else:
@@ -321,7 +303,6 @@ class EditLyricsForm(forms.ModelForm):
         exclude = ("seller", "downloads", "bpm", "music_key", "license_type", "preview_file")
 
         widgets = {
-            # ปกติจะตั้ง seller เป็น HiddenInput แล้วกำหนดค่าใน view (request.user)
             "seller": forms.HiddenInput(),
             "title": forms.TextInput(attrs={
                 "class": "form-input w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",
@@ -339,7 +320,6 @@ class EditLyricsForm(forms.ModelForm):
                 "placeholder": "เช่น 19.99"
             }),
 
-            # ManyToMany
             "genre": forms.Select(
                 attrs={
                     "class": "w-full p-3 rounded bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500",

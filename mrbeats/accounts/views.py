@@ -60,14 +60,14 @@ class ProfileView(View):
         months = [p['month'].strftime('%Y-%m') for p in earnings_qs]
         earnings = [float(p['total'] or 0) for p in earnings_qs]
 
-        # rating distribution (count per rating value 1..5)
+        #ทำ dic ตามคะแนน รีวิว
         ratings = (Review.objects
                 .filter(product__seller_id=id)
                 .values('rating')
                 .annotate(cnt=Count('id'))
                 .order_by('rating'))
         
-        # build dict for 1..5
+        # ใส่ว่าแต่ละคะแนนมีกี่ตัว แล้ว แยกเป็น list 
         rating_counts = {i: 0 for i in range(1, 6)}
         for r in ratings:
             rating_counts[r['rating']] = r['cnt']
@@ -79,7 +79,6 @@ class ProfileView(View):
         'earnings_json': json.dumps(earnings),
         'rating_labels_json': json.dumps(rating_labels),
         'rating_values_json': json.dumps(rating_values),
-        # ส่งข้อมูลอื่น ๆ ที่ต้องการไปด้วย
     }
         
         user = User.objects.get(id=id)
@@ -97,7 +96,7 @@ class ProfileView(View):
             if getattr(p, "lyrics_text", None):
                 preview_text = p.lyrics_text.strip()
                 if len(preview_text) > MAX_CHARS:
-                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n... (truncated)"
+                    preview_text = preview_text[:MAX_CHARS].rsplit("\n", 1)[0] + "\n\n..."
             p.preview_text = preview_text
 
         return render(request, 'profile.html', {"profileinfo": user, "product": products, "prodcount": prodcount, "totalearn": totalearn, "user_rating": avg_rating, "context": context})
