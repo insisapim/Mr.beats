@@ -53,12 +53,18 @@ class ContractWorkForm(ModelForm):
     )
     def clean(self):
         cleaned_data = super().clean()
+        title = cleaned_data.get('title')
+        details = cleaned_data.get('details')
         deadline = cleaned_data.get('deadline')
         wages = cleaned_data.get('wages')
+        if not title or not details or not deadline or not wages:
+            raise ValidationError (
+                "Please fill out the information completely."
+            )
         if wages < 0:
             raise ValidationError (
                 "Wages cannot be negative"
-            )   
+            )  
         if deadline < current_datetime:
             raise ValidationError (
                 "deadline must more than time now"

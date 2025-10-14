@@ -72,7 +72,7 @@
               />
             </svg>
             <span class="text-white font-semibold text-sm"
-              >{{ product.avg_rating|default:0 }}</span
+              >{{ product.avg_rating|default:0|floatformat:1 }}</span
             >
           </span>
           <span class="text-xs text-gray-500"

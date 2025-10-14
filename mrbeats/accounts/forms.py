@@ -69,7 +69,7 @@ class ProfileEditForm(forms.ModelForm):
         widgets = {
             "artist_name": forms.TextInput(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500"}),
             "bio": forms.Textarea(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500 h-32 resize-none"}),
-            "profile_image": forms.ClearableFileInput(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500 h-32 resize-none opacity-0 absolute inset-0"}),
+            "profile_image": forms.FileInput(attrs={"class": "w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 text-gray-100 focus:ring-purple-500 focus:border-purple-500 h-32 resize-none opacity-0 absolute inset-0"}),
         }
 
     def save(self, commit=True):

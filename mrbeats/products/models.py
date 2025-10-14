@@ -31,7 +31,7 @@ class Product(models.Model):
     license_type = models.CharField(max_length=20, choices=LICENSE_CHOICES, default='non_exclusive')    
     genre = models.ForeignKey(Genre, on_delete=models.SET_NULL, null=True, blank=True)
     theme = models.ManyToManyField(Theme, blank=True)
-    product_image = models.ImageField(upload_to='products/images/%Y/%m/', blank=True, null=True)
+    product_image = models.ImageField(upload_to='products/images/%Y/%m/', blank=True, default='products/images/2025/image-placeholder.png')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     downloads = models.PositiveIntegerField(default=0)
