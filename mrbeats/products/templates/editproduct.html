@@ -138,13 +138,13 @@ UploadBeats{%endblock %} {% block content %} {%if product.lyrics_text == "" %}
               <img
                 id="lyrics_imagePreview"
                 src="{{ productForm.instance.product_image.url }}"
-                class="mt-4 max-h-48 rounded-lg border border-gray-700"
+                class="mt-4 max-h-48 rounded-lg border border-gray-700 justify-center items-center"
                 alt="Product Image Preview"
               />
               {% else %}
               <img
                 id="lyrics_imagePreview"
-                class="mt-4 max-h-48 rounded-lg hidden border border-gray-700"
+                class="mt-4 max-h-48 rounded-lg hidden border justify-center items-center border-gray-700"
                 alt="Product Image Preview"
               />
               {% endif %}

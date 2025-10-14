@@ -1,25 +1,40 @@
-{% extends 'layouts/base.html' %}
-{% load static %}
-{% load humanize %}
-
+{% extends 'layouts/base.html' %} {% load static %} {% load humanize %} 
 {% block content %}
 <div class="min-h-screen bg-[#0b0b0b] text-gray-200 p-10">
-
   <div class="max-w-4xl mx-auto">
     <div class="bg-gray-900/60 rounded-2xl shadow-xl overflow-hidden">
-      <div class="aspect-video bg-gray-800 flex items-center justify-center overflow-hidden">
-        <img src="{{ get_product.product_image.url }}" alt="Product Image" class="w-full h-full object-cover">
+      <div
+        class="aspect-video bg-gray-800 flex items-center justify-center overflow-hidden"
+      >
+        <img
+          src="{{ get_product.product_image.url }}"
+          alt="Product Image"
+          class="w-full h-full object-cover"
+        />
       </div>
-
+      <audio id="audioPreview" controls controlsList="nodownload" class="mt-4 w-full">
+        <source
+          id="audioSource"
+          src="{{ get_product.preview_file.url }}"
+          type="audio/mpeg"
+        />
+        Your browser does not support the audio element.
+      </audio>
 
       {% if get_product %}
       <div class="p-6">
-        <h1 class="text-3xl font-bold text-white mb-1">{{get_product.title}}</h1>
+        <h1 class="text-3xl font-bold text-white mb-1">
+          {{get_product.title}}
+        </h1>
         {% if get_product.seller.artist_name %}
-        <p class="text-gray-400 mb-4">Producer : <span class="text-blue-400">{{get_product.seller.artist_name}}</span>
+        <p class="text-gray-400 mb-4">
+          Producer :
+          <span class="text-blue-400">{{get_product.seller.artist_name}}</span>
         </p>
         {% else %}
-        <p class="text-gray-400 mb-4">Producer : <span class="text-gray-400">Secret</span></p>
+        <p class="text-gray-400 mb-4">
+          Producer : <span class="text-gray-400">Secret</span>
+        </p>
         {% endif %}
         <!-- <div class="flex flex-wrap gap-2 mb-6">
           <span class="px-3 py-1 text-sm bg-gray-800 rounded-full">Dark</span>
@@ -35,15 +50,21 @@
           </div>
           <div>
             <p class="text-gray-400">Key</p>
-            <p class="text-lg font-semibold text-white">{{get_product.music_key}}</p>
+            <p class="text-lg font-semibold text-white">
+              {{get_product.music_key}}
+            </p>
           </div>
           <div>
             <p class="text-gray-400">Genre</p>
-            <p class="text-lg font-semibold text-white">DONNO</p>
+            <p class="text-lg font-semibold text-white">
+              {{get_product.genre}}
+            </p>
           </div>
           <div>
             <p class="text-gray-400">Price</p>
-            <p class="text-lg font-semibold text-white">${{ get_product.price|intcomma }}</p>
+            <p class="text-lg font-semibold text-white">
+              ${{ get_product.price|intcomma }}
+            </p>
           </div>
         </div>
 
@@ -56,21 +77,26 @@
         {% endif %}
         <form action="{% url 'cartadd' get_product.id %}" method="POST">
           {% csrf_token %}
-          <button type="submit"
-            class="w-full py-3 rounded-lg bg-gradient-to-tr from-purple-600 to-pink-500 text-white font-semibold hover:opacity-90 transition">
+          <button
+            type="submit"
+            class="w-full py-3 rounded-lg bg-gradient-to-tr from-purple-600 to-pink-500 text-white font-semibold hover:opacity-90 transition"
+          >
             Add to Cart
           </button>
-          <a href="{% url 'product_list' %}" class="block text-center mt-3 text-gray-400 hover:text-white">
-          Continue Shopping
-        </a>
+          <a
+            href="{% url 'product_list' %}"
+            class="block text-center mt-3 text-gray-400 hover:text-white"
+          >
+            Continue Shopping
+          </a>
         </form>
-
-
       </div>
     </div>
 
     <div class="mt-10 space-y-4">
-      <h2 class="text-2xl font-semibold text-white">Reviews ({{review_count}})</h2>
+      <h2 class="text-2xl font-semibold text-white">
+        Reviews ({{review_count}})
+      </h2>
       {% for i in review %}
       <div class="bg-gray-900/50 border border-gray-800 p-5 rounded-xl">
         <div class="flex justify-between items-center mb-2">
@@ -78,17 +104,15 @@
           <p class="text-sm text-gray-400">{{i.created_at}}</p>
         </div>
         <div class="flex">
-          {% for n in "12345" %}
-          {% if forloop.counter <= i.rating %} 
-            <span class="text-yellow-400">★</span>
-            {% endif %}
-            {% endfor %}
+          {% for n in "12345" %} {% if forloop.counter <= i.rating %}
+          <span class="text-yellow-400">★</span>
+          {% endif %} {% endfor %}
         </div>
 
         <p class="text-gray-300">{{i.comment}}</p>
       </div>
       {% endfor %}
-
     </div>
   </div>
   {% endblock %}
+</div>

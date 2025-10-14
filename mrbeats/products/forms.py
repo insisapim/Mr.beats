@@ -17,8 +17,8 @@ class GenreForm(forms.ModelForm):
 
 
 class ProductForm(forms.ModelForm):
-    file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
-    preview_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
+    file = forms.FileField(required=False, widget=forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
+    preview_file = forms.FileField(required=False, widget=forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
     price = forms.DecimalField(
         required=False,
         min_value=0,
@@ -136,7 +136,7 @@ class ProductForm(forms.ModelForm):
         return cleaned
     
 class LyricsForm(forms.ModelForm):
-    file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
+    file = forms.FileField(required=False, widget=forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
 
     class Meta:
         model = Product
@@ -197,8 +197,8 @@ class LyricsForm(forms.ModelForm):
 
 
 class EditProductForm(forms.ModelForm):
-    file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
-    preview_file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
+    file = forms.FileField(required=False, widget=forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
+    preview_file = forms.FileField(required=False, widget=forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
     price = forms.DecimalField(
         required=False,
         min_value=0,
@@ -314,7 +314,7 @@ class EditProductForm(forms.ModelForm):
         return cleaned
 
 class EditLyricsForm(forms.ModelForm):
-    file = forms.FileField(required=False, widget=forms.ClearableFileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
+    file = forms.FileField(required=False, widget=forms.FileInput(attrs={"class": "form-file-input opacity-0 absolute inset-0"}))
 
     class Meta:
         model = Product
